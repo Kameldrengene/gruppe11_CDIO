@@ -1,3 +1,4 @@
 include ':app'
 rootProject.name = "gruppe11_CDIO"
 include ':openCVLibrary3410'
+include ':openCVLibrary3410'
