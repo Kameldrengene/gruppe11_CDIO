@@ -9,9 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.gruppe11_cdio.Dialog.KabaleDialog;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button spil,alertButton,regler;
     Dialog alertDialog;
+    KabaleDialog kabaleDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,16 +39,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(v==regler){
 
-
-            View alertView = getLayoutInflater().inflate(R.layout.popup1button,null);
-            alertDialog = new Dialog(this);
-            TextView alertTitle = alertView.findViewById(R.id.alertTitle);
-            TextView alertBody = alertView.findViewById(R.id.alertBody);
-            alertButton = alertView.findViewById(R.id.alertButton);
-            alertButton.setOnClickListener(this);
-
-            alertTitle.setText("Velkommen til 7-kabale");
-            alertBody.setText("" +
+            kabaleDialog = new KabaleDialog(this,1);
+            kabaleDialog.setTitle("Velkommen til 7-kabale");
+            kabaleDialog.setBody("" +
                     "Denne app bruges til at hjælpe\n" +
                     "med 7-kabale.\n" +
                     "Du kan starte appen i hvilken\n" +
@@ -62,12 +58,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     "tilbage-pilen. Kabalen kan\n" +
                     "startes igen, hvornår som helst.");
 
-            alertDialog.setContentView(alertView);
-            alertDialog.show();
+            kabaleDialog.show();
         }
 
-        if(v==alertButton){
-            alertDialog.dismiss();
+        if(v==kabaleDialog.getbutton1()){
+            kabaleDialog.dismiss();
         }
     }
 }
