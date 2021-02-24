@@ -3,22 +3,26 @@ package com.example.gruppe11_cdio;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 
-public class GameActivity extends AppCompatActivity implements Frag_GameControls.Controls{
+public class GameActivity extends AppCompatActivity implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls{
 
+    ImageView im;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        im = findViewById(R.id.imageView);
+
         //Load controls
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, new Frag_GameControls())
                 .commit();
-
     }
 
     @Override
@@ -33,5 +37,17 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, new Frag_GameEdit())
                 .commit();
+    }
+
+    @Override
+    public void goControls() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.framelayout, new Frag_GameControls())
+                .commit();
+    }
+
+    @Override
+    public void updateImage(Uri uri) {
+        im.setImageURI(uri);
     }
 }
