@@ -40,7 +40,7 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
     }
 
     @Override
-    public void goControls() {
+    public void goToControls() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, new Frag_GameControls())
                 .commit();

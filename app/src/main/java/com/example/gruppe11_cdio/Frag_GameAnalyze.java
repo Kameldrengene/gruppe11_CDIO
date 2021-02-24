@@ -14,13 +14,14 @@ import androidx.fragment.app.Fragment;
 
 public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
 
-    Button takeImage;
+    Button takeImage, back;
     Controls callBack;
     int USER_IMAGE_CODE = 0;
 
     //Interface so this fragment can talk to parent activity
     public interface Controls{
         void updateImage(Uri uri);
+        void goToControls();
     }
 
     @Override
@@ -43,6 +44,9 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
         takeImage = view.findViewById(R.id.button2);
         takeImage.setOnClickListener(this);
 
+        back = view.findViewById(R.id.button3);
+        back.setOnClickListener(this);
+
         return view;
     }
 
@@ -52,6 +56,8 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
             Intent i = new Intent(getContext(), TakePhoto.class);
             startActivityForResult(i, USER_IMAGE_CODE);
         }
+        if(v == back)
+            callBack.goToControls();
     }
 
     @Override
@@ -61,6 +67,7 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
         if(requestCode == USER_IMAGE_CODE && resultCode == Activity.RESULT_OK){
             Uri uri = Uri.parse(data.getStringExtra("result"));
             callBack.updateImage(uri);
+            callBack.goToControls();
         }
 
     }

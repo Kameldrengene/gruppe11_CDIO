@@ -10,10 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
     Button spil, reglerOkButton,regler;
     View reglerView;
     Dialog alertDialog;
     TextView title,body;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         regler = findViewById(R.id.regler);
         spil.setOnClickListener(this);
         regler.setOnClickListener(this);
-
 
         alertDialog = new Dialog(this);
         reglerView = getLayoutInflater().inflate(R.layout.popup1button, null);
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 "tilbage-pilen. Kabalen kan\n" +
                 "startes igen, hvornår som helst.");
         alertDialog.setContentView(reglerView);
-
 
     }
 

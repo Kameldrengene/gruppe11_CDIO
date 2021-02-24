@@ -17,7 +17,7 @@ public class Frag_GameEdit extends Fragment implements View.OnClickListener {
 
     //Interface so this fragment can talk to parent activity
     public interface Controls{
-        void goControls();
+        void goToControls();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Frag_GameEdit extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
 
         if(v == save){
-            callBack.goControls();
+            callBack.goToControls();
         }
 
     }
