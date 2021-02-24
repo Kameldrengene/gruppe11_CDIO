@@ -4,15 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="15dp">
 
     <TextView
-        android:id="@+id/alertTitle"
+        android:id="@+id/popup2Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
         android:text="TextView"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -21,23 +18,31 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/alertBody"
+        android:id="@+id/popup2Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alertTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/popup2Title" />
 
     <Button
-        android:id="@+id/alertButton"
+        android:id="@+id/popup2button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:text="OK"
+        android:text="Button"
+        android:textColor="@color/secondarydark"
+        app:layout_constraintEnd_toStartOf="@+id/popup2button"
+        app:layout_constraintTop_toBottomOf="@+id/popup2Body" />
+
+    <Button
+        android:id="@+id/popup2button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="Button"
         android:textColor="@color/secondarydark"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alertBody" />
-
+        app:layout_constraintTop_toBottomOf="@+id/popup2Body" />
 </androidx.constraintlayout.widget.ConstraintLayout>
