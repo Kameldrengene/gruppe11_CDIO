@@ -1,23 +1,28 @@
 package com.example.gruppe11_cdio;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class Frag_GameControls extends Fragment implements View.OnClickListener {
 
     Button analyze, camera, edit;
     Controls callBack;
+    int USER_IMAGE_CODE = 0;
 
     //Interface so this fragment can talk to parent activity
     public interface Controls{
         void goAnalyze();
         void goEdit();
+        void updateImage(Uri uri);
     }
 
     @Override
@@ -49,17 +54,26 @@ public class Frag_GameControls extends Fragment implements View.OnClickListener 
         return view;
     }
 
-
     @Override
     public void onClick(View v) {
 
         if(v == analyze) callBack.goAnalyze();
 
         if(v == camera){
-
+            Intent i = new Intent(getContext(), TakePhoto.class);
+            startActivityForResult(i, USER_IMAGE_CODE);
         }
 
         if(v == edit) callBack.goEdit();
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == USER_IMAGE_CODE && resultCode == Activity.RESULT_OK){
+            Uri uri = Uri.parse(data.getStringExtra("result"));
+            callBack.updateImage(uri);
+        }
     }
 }

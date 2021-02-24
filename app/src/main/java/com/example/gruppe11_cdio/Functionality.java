@@ -1,11 +1,21 @@
 package com.example.gruppe11_cdio;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import java.io.ByteArrayOutputStream;
+
+import static androidx.core.app.ActivityCompat.startActivityForResult;
 
 public class Functionality {
 

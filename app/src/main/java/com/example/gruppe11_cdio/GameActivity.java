@@ -48,6 +48,7 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
 
     @Override
     public void updateImage(Uri uri) {
+        System.out.println("HER");
         im.setImageURI(uri);
     }
 }
