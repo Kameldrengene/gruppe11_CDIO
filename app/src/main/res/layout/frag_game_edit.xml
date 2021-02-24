@@ -12,7 +12,9 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="50dp"
+        android:layout_marginBottom="20dp"
         android:text="Du skal gøre sådan og sådan for at redigere kabalen. Du skal gøre sådan og sådan for at redigere kabalen."
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
