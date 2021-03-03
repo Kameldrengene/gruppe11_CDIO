@@ -20,7 +20,6 @@ public class TakePhoto extends AppCompatActivity {
 
     int CAMERA_REQUEST_CODE = 0;
     int CAMERA_CODE = 1;
-    static boolean inProgress = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,7 +44,6 @@ public class TakePhoto extends AppCompatActivity {
         } else {
             Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(i, CAMERA_CODE);
-            inProgress = true;
         }
     }
 
@@ -76,7 +74,6 @@ public class TakePhoto extends AppCompatActivity {
             setResult(Activity.RESULT_OK, returnIntent);
         }
 
-        inProgress = false;
         finish();
     }
 
