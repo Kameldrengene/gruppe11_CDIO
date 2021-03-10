@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls{
 
-    RelativeLayout relativeLayout1,relativeLayout2,relativeLayout3,relativeLayout4,relativeLayout5,relativeLayout6,relativeLayout7;
-
+    RelativeLayout relativeLayout1,relativeLayout2,relativeLayout3,relativeLayout4,relativeLayout5,relativeLayout6,relativeLayout7,holder1,holder2,holder3
+,holder4,pile,open;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,14 +29,26 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
         relativeLayout5 = findViewById(R.id.relativeLayout5);
         relativeLayout6 = findViewById(R.id.relativeLayout6);
         relativeLayout7 = findViewById(R.id.relativeLayout7);
+        holder1 = findViewById(R.id.holder1);
+        holder2 = findViewById(R.id.holder2);
+        holder3 = findViewById(R.id.holder3);
+        holder4 = findViewById(R.id.holder4);
+        pile = findViewById(R.id.pile);
+        open = findViewById(R.id.open);
 
-        setrelativelayout(relativeLayout2);
-        setrelativelayout(relativeLayout3);
-        setrelativelayout(relativeLayout4);
-        setrelativelayout(relativeLayout5);
-        setrelativelayout(relativeLayout6);
-        setrelativelayout(relativeLayout7);
-        setrelativelayout(relativeLayout1);
+        setrelativelayout(open,1);
+        setrelativelayout(pile,1);
+        setrelativelayout(holder1,1);
+        setrelativelayout(holder2,1);
+        setrelativelayout(holder3,1);
+        setrelativelayout(holder4,1);
+        setrelativelayout(relativeLayout2,10);
+        setrelativelayout(relativeLayout3,10);
+        setrelativelayout(relativeLayout4,10);
+        setrelativelayout(relativeLayout5,10);
+        setrelativelayout(relativeLayout6,10);
+        setrelativelayout(relativeLayout7,10);
+        setrelativelayout(relativeLayout1,10);
 
 
         //Load controls
@@ -72,7 +84,7 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
        // im.setImageURI(uri);
     }
 
-    public void setrelativelayout(RelativeLayout relativeLayout){
+    public void setrelativelayout(RelativeLayout relativeLayout,int size){
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -83,11 +95,26 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
 
 
         ArrayList<ImageView> cards = new ArrayList<>();
-        for (int i = 0; i < 10 ; i++) {
+
+
+        for (int i = 0; i < size ; i++) {
             ImageView card = new ImageView(this);
-            card.setBackgroundResource(R.drawable.clubs_3);
-            card.setId(View.generateViewId());
-            cards.add(card);
+            if(size == 1){
+                if(relativeLayout == pile){
+                    card.setBackgroundResource(R.drawable.card_back);
+                }else if(relativeLayout == open){
+                    card.setBackgroundResource(R.drawable.clubs_a);
+                }
+                else{
+                    card.setBackgroundResource(R.drawable.holder);
+                }
+                card.setId(View.generateViewId());
+                cards.add(card);
+            }else {
+                card.setBackgroundResource(R.drawable.hearts_2);
+                card.setId(View.generateViewId());
+                cards.add(card);
+            }
         }
 
         for (int i = 0; i < cards.size() ; i++) {
@@ -101,4 +128,6 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
             relativeLayout.addView(cards.get(i),rp);
         }
     }
+
+
 }

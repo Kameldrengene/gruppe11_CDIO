@@ -27,12 +27,61 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <RelativeLayout
+                    android:id="@+id/pile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@+id/pile"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/holder1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/holder2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@+id/holder1"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/holder3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@+id/holder2"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/holder4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@+id/holder3"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/relativeLayout1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/holder1">
 
                 </RelativeLayout>
 
@@ -41,8 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/relativeLayout1"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout1">
 
                 </RelativeLayout>
 
@@ -51,8 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout2">
 
                 </RelativeLayout>
 
@@ -61,8 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/relativeLayout3"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout3">
 
                 </RelativeLayout>
 
@@ -71,8 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/relativeLayout4"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout4">
 
                 </RelativeLayout>
 
@@ -81,8 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/relativeLayout5"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout5">
 
                 </RelativeLayout>
 
@@ -91,8 +135,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/relativeLayout6"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout6">
 
                 </RelativeLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
