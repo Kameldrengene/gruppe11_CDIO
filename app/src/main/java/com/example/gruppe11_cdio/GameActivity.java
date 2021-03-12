@@ -11,17 +11,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.example.gruppe11_cdio.Factory.Card;
+import com.example.gruppe11_cdio.Factory.Card_Factory;
+
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class GameActivity extends AppCompatActivity implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls{
 
     RelativeLayout relativeLayout1,relativeLayout2,relativeLayout3,relativeLayout4,relativeLayout5,relativeLayout6,relativeLayout7,holder1,holder2,holder3
 ,holder4,pile,open;
+    Card_Factory card_factory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        card_factory = new Card_Factory(this);
         relativeLayout1 = findViewById(R.id.relativeLayout1);
         relativeLayout2 = findViewById(R.id.relativeLayout2);
         relativeLayout3 = findViewById(R.id.relativeLayout3);
@@ -98,22 +104,17 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
 
 
         for (int i = 0; i < size ; i++) {
-            ImageView card = new ImageView(this);
             if(size == 1){
                 if(relativeLayout == pile){
-                    card.setBackgroundResource(R.drawable.card_back);
+                    cards.add(card_factory.createCard(new Card(0,0)));
                 }else if(relativeLayout == open){
-                    card.setBackgroundResource(R.drawable.clubs_a);
+                    cards.add(card_factory.createCard(new Card(2,4)));
                 }
                 else{
-                    card.setBackgroundResource(R.drawable.holder);
+                    cards.add(card_factory.createCard(new Card(1,0)));
                 }
-                card.setId(View.generateViewId());
-                cards.add(card);
             }else {
-                card.setBackgroundResource(R.drawable.hearts_2);
-                card.setId(View.generateViewId());
-                cards.add(card);
+                cards.add(card_factory.createCard(new Card(new Random().nextInt(4),new Random().nextInt(13)+1)));
             }
         }
 
