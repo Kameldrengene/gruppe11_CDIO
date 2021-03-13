@@ -2,7 +2,7 @@ package com.example.gruppe11_cdio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
+import java.text.SimpleDateFormat;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -112,12 +114,16 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
     public void updateImage(Uri uri) {
         System.out.println("HER");
         File finalFile = new File(getRealPathFromURI(uri));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.GERMANY);
+        Date now = new Date();
+        String fileName = formatter.format(now) + ".jpg";
+
         // Sender billede til vores backend i nodejs
                 OkHttpClient client = new OkHttpClient().newBuilder()
                         .build();
                 MediaType mediaType = MediaType.parse("text/plain");
                 RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("myfile","android.png",
+                        .addFormDataPart("myfile",fileName,
                                 RequestBody.create(MediaType.parse("application/octet-stream"),
                                         finalFile))
                         .build();
