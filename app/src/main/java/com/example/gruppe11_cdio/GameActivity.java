@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.gruppe11_cdio.Factory.Card;
 import com.example.gruppe11_cdio.Factory.Card_Factory;
+import com.example.gruppe11_cdio.Objects.GameBoard;
+import com.example.gruppe11_cdio.Objects.Pile;
 
 
 import java.io.File;
@@ -25,9 +27,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -38,13 +41,23 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+public class GameActivity extends AppCompatActivity implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls, View.OnClickListener {
 
-public class GameActivity extends AppCompatActivity implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls{
+    int NUMBER_OF_SPACES = 7;
+    int NUMBER_OF_FINISH_PLACES = 4;
+    int NUMBER_OF_LAYOUTS = 13;
+    int CARD_HEIGHT_IN_DP = 75;
+
+    int width;
+    int dimensionInDp;
+
     Executor bgThread;
     Handler uiThread;
-    RelativeLayout relativeLayout1,relativeLayout2,relativeLayout3,relativeLayout4,relativeLayout5,relativeLayout6,relativeLayout7,holder1,holder2,holder3
-,holder4,pile,open;
+
+    RelativeLayout layouts[] = new RelativeLayout[NUMBER_OF_LAYOUTS];
     Card_Factory card_factory;
+    GameBoard gameBoard = new GameBoard();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,35 +66,39 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
         bgThread = Executors.newSingleThreadExecutor();
         uiThread = new Handler();
 
+        //Calculate width of cards for current display
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        width = displayMetrics.widthPixels;
+
+        int cardHeightInDp = CARD_HEIGHT_IN_DP;
+        dimensionInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, cardHeightInDp, getResources().getDisplayMetrics());
+
         card_factory = new Card_Factory(this);
-        relativeLayout1 = findViewById(R.id.relativeLayout1);
-        relativeLayout2 = findViewById(R.id.relativeLayout2);
-        relativeLayout3 = findViewById(R.id.relativeLayout3);
-        relativeLayout4 = findViewById(R.id.relativeLayout4);
-        relativeLayout5 = findViewById(R.id.relativeLayout5);
-        relativeLayout6 = findViewById(R.id.relativeLayout6);
-        relativeLayout7 = findViewById(R.id.relativeLayout7);
-        holder1 = findViewById(R.id.holder1);
-        holder2 = findViewById(R.id.holder2);
-        holder3 = findViewById(R.id.holder3);
-        holder4 = findViewById(R.id.holder4);
-        pile = findViewById(R.id.pile);
-        open = findViewById(R.id.open);
 
-        setrelativelayout(open,1);
-        setrelativelayout(pile,1);
-        setrelativelayout(holder1,1);
-        setrelativelayout(holder2,1);
-        setrelativelayout(holder3,1);
-        setrelativelayout(holder4,1);
-        setrelativelayout(relativeLayout2,10);
-        setrelativelayout(relativeLayout3,10);
-        setrelativelayout(relativeLayout4,10);
-        setrelativelayout(relativeLayout5,10);
-        setrelativelayout(relativeLayout6,10);
-        setrelativelayout(relativeLayout7,10);
-        setrelativelayout(relativeLayout1,10);
+        //todo skal fjernes når vi får et rigtgit obekt!
+        gameBoard.draw();
 
+        //Add layouts to array
+        layouts[0] =  findViewById(R.id.relativeLayout1);
+        layouts[1] =  findViewById(R.id.relativeLayout2);
+        layouts[2] = findViewById(R.id.relativeLayout3);
+        layouts[3] = findViewById(R.id.relativeLayout4);
+        layouts[4] = findViewById(R.id.relativeLayout5);
+        layouts[5] = findViewById(R.id.relativeLayout6);
+        layouts[6] = findViewById(R.id.relativeLayout7);
+        layouts[7] = findViewById(R.id.holder1);
+        layouts[8] = findViewById(R.id.holder2);
+        layouts[9] = findViewById(R.id.holder3);
+        layouts[10] = findViewById(R.id.holder4);
+        layouts[11] = findViewById(R.id.pile);
+        layouts[12] = findViewById(R.id.open);
+
+        for (int i = 0; i < NUMBER_OF_LAYOUTS; i++) {
+            layouts[i].setOnClickListener(this);
+        }
+
+        displayBoard();
 
         //Load controls
         getSupportFragmentManager().beginTransaction()
@@ -149,44 +166,70 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
 
     }
 
-    public void setrelativelayout(RelativeLayout relativeLayout,int size){
+    private void displayBoard(){
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
+        ArrayList<Card> currentArrayOfCards;
 
-        int dimensionInPixel = 75;
-        int dimensionInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dimensionInPixel, getResources().getDisplayMetrics());
+        //First we set the spaces
+        HashMap<Integer, Pile> spaces = gameBoard.getSpaces();
 
-
-        ArrayList<ImageView> cards = new ArrayList<>();
-
-
-        for (int i = 0; i < size ; i++) {
-            if(size == 1){
-                if(relativeLayout == pile){
-                    cards.add(card_factory.createCard(new Card(0,0)));
-                }else if(relativeLayout == open){
-                    cards.add(card_factory.createCard(new Card(2,4)));
-                }
-                else{
-                    cards.add(card_factory.createCard(new Card(1,0)));
-                }
-            }else {
-                cards.add(card_factory.createCard(new Card(new Random().nextInt(4),new Random().nextInt(13)+1)));
-            }
+        for (int i = 0; i < NUMBER_OF_SPACES; i++) {
+            displayPile(spaces.get(i).getCardsInSequence(), layouts[i]);
         }
 
-        for (int i = 0; i < cards.size() ; i++) {
+        //Then the finish spaces
+        HashMap<Integer, ArrayList<Card>> finishSpaces = gameBoard.getFinSpaces();
+
+        for (int i = 0; i < NUMBER_OF_FINISH_PLACES; i++) {
+            currentArrayOfCards = finishSpaces.get(i);
+
+            if(currentArrayOfCards.size() == 0)
+                displayPile(new Card(1,0), layouts[NUMBER_OF_SPACES+i]);
+            else
+                displayPile(finishSpaces.get(i).get(i), layouts[NUMBER_OF_SPACES+i]);
+        }
+
+        //And then deck and open card
+        Card openCard = gameBoard.getDeck().get(gameBoard.getDeckPointer());
+        displayPile(new Card(0,0), layouts[NUMBER_OF_SPACES+NUMBER_OF_FINISH_PLACES]);
+        displayPile(openCard, layouts[NUMBER_OF_SPACES+NUMBER_OF_FINISH_PLACES+1]);
+
+    }
+
+    private void displayPile(ArrayList<Card> arrayOfCards, RelativeLayout layout){
+        ArrayList<ImageView> cardViews = new ArrayList<>();
+
+        for (int i = 0; i < arrayOfCards.size(); i++) {
+            cardViews.add(card_factory.createCard(arrayOfCards.get(i)));
+        }
+
+        for (int i = 0; i < cardViews.size() ; i++) {
             RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(width/8, dimensionInDp);
             if(i==0){
                 rp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             }else{
-                rp.addRule(RelativeLayout.ALIGN_TOP, cards.get(i-1).getId());
+                rp.addRule(RelativeLayout.ALIGN_TOP, cardViews.get(i-1).getId());
             }
             rp.setMargins(10,40,10,0);
-            relativeLayout.addView(cards.get(i),rp);
+            layout.addView(cardViews.get(i),rp);
         }
+    }
+
+    private void displayPile(Card card, RelativeLayout layout){
+
+        ImageView cardView = card_factory.createCard(card);
+
+        RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(width/8, dimensionInDp);
+        rp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+        rp.setMargins(10,40,10,0);
+        layout.addView(cardView,rp);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
+        System.out.println("CLICKED");
     }
 
     public String getRealPathFromURI(Uri uri) {
@@ -202,6 +245,4 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
         }
         return path;
     }
-
-
 }
