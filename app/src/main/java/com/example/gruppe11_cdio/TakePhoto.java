@@ -56,7 +56,6 @@ public class TakePhoto extends AppCompatActivity {
                 Toast.makeText(this, "Mangler kameratilladelse", Toast.LENGTH_SHORT).show();
                 finish();
             }
-
         }
     }
 
