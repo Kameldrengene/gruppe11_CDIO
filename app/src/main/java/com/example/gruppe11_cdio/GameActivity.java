@@ -111,9 +111,9 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
     }
 
     @Override
-    public void updateImage(Uri uri) {
+    public void updateImage(String path) {
         System.out.println("HER");
-        File finalFile = new File(getRealPathFromURI(uri));
+        File finalFile = new File(path);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.GERMANY);
         Date now = new Date();
         String fileName = formatter.format(now) + ".jpg";

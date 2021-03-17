@@ -20,7 +20,7 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
 
     //Interface so this fragment can talk to parent activity
     public interface Controls{
-        void updateImage(Uri uri);
+        void updateImage(String path);
         void goToControls();
     }
 
@@ -65,8 +65,8 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == USER_IMAGE_CODE && resultCode == Activity.RESULT_OK){
-            Uri uri = Uri.parse(data.getStringExtra("result"));
-            callBack.updateImage(uri);
+            String path = data.getStringExtra("result");
+            callBack.updateImage(path);
             callBack.goToControls();
         }
 

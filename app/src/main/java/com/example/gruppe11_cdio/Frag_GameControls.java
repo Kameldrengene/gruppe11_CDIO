@@ -22,7 +22,7 @@ public class Frag_GameControls extends Fragment implements View.OnClickListener 
     public interface Controls{
         void goAnalyze();
         void goEdit();
-        void updateImage(Uri uri);
+        void updateImage(String path);
     }
 
     @Override
@@ -72,8 +72,8 @@ public class Frag_GameControls extends Fragment implements View.OnClickListener 
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == USER_IMAGE_CODE && resultCode == Activity.RESULT_OK){
-            Uri uri = Uri.parse(data.getStringExtra("result"));
-            callBack.updateImage(uri);
+            String path = data.getStringExtra("result");
+            callBack.updateImage(path);
         }
     }
 }
