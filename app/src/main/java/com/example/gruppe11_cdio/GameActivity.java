@@ -2,9 +2,12 @@ package com.example.gruppe11_cdio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
+import java.text.SimpleDateFormat;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -17,9 +20,26 @@ import com.example.gruppe11_cdio.Factory.Card_Factory;
 import com.example.gruppe11_cdio.Objects.GameBoard;
 import com.example.gruppe11_cdio.Objects.Pile;
 
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class GameActivity extends AppCompatActivity implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls, View.OnClickListener {
 
@@ -31,6 +51,9 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
     int width;
     int dimensionInDp;
 
+    Executor bgThread;
+    Handler uiThread;
+
     RelativeLayout layouts[] = new RelativeLayout[NUMBER_OF_LAYOUTS];
     Card_Factory card_factory;
     GameBoard gameBoard = new GameBoard();
@@ -39,6 +62,9 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        bgThread = Executors.newSingleThreadExecutor();
+        uiThread = new Handler();
 
         //Calculate width of cards for current display
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -104,7 +130,40 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
     @Override
     public void updateImage(Uri uri) {
         System.out.println("HER");
-       // im.setImageURI(uri);
+        File finalFile = new File(getRealPathFromURI(uri));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.GERMANY);
+        Date now = new Date();
+        String fileName = formatter.format(now) + ".jpg";
+
+        // Sender billede til vores backend i nodejs
+                OkHttpClient client = new OkHttpClient().newBuilder()
+                        .build();
+                MediaType mediaType = MediaType.parse("text/plain");
+                RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart("myfile",fileName,
+                                RequestBody.create(MediaType.parse("application/octet-stream"),
+                                        finalFile))
+                        .build();
+                Request request = new Request.Builder()
+                        .url("http://130.225.170.68:8081/upload")
+                        .method("POST", body)
+                        .build();
+                bgThread.execute(()->{
+
+                    try {
+                        Response response = client.newCall(request).execute();
+                        String responseMsg = response.body().string();
+
+                        uiThread.post(()->{
+                            Toast.makeText(this,responseMsg,Toast.LENGTH_LONG).show();
+                        });
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                });
+
     }
 
     private void displayBoard(){
@@ -171,5 +230,19 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
     public void onClick(View v) {
         Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
         System.out.println("CLICKED");
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        String path = "";
+        if (getContentResolver() != null) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                path = cursor.getString(idx);
+                cursor.close();
+            }
+        }
+        return path;
     }
 }
