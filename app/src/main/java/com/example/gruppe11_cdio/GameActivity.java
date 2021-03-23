@@ -131,7 +131,7 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
     public void updateImage(String path) {
         System.out.println("HER");
         File finalFile = new File(path);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.GERMANY);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.GERMANY);
         Date now = new Date();
         String fileName = formatter.format(now) + ".jpg";
 
@@ -140,12 +140,12 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
                         .build();
                 MediaType mediaType = MediaType.parse("text/plain");
                 RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("myfile",fileName,
+                        .addFormDataPart("file",fileName,
                                 RequestBody.create(MediaType.parse("application/octet-stream"),
                                         finalFile))
                         .build();
                 Request request = new Request.Builder()
-                        .url("http://130.225.170.68:8081/upload")
+                        .url("http://cdio.isik.dk:5000")
                         .method("POST", body)
                         .build();
                 bgThread.execute(()->{
