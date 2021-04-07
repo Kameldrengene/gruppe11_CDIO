@@ -1,5 +1,7 @@
 package com.example.gruppe11_cdio.Factory;
 
+import androidx.annotation.Nullable;
+
 public class Card {
     private int     type;       //0: spar; 1: Hjerter; 2: Klør; 3: Ruder;
     private int     value;
@@ -35,5 +37,12 @@ public class Card {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public boolean equals(Card obj) {
+        if(this.getValue() == obj.getValue() && this.getType() == obj.getType())
+            return true;
+        else
+            return false;
     }
 }
