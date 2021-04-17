@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.gruppe11_cdio.Factory.Card;
@@ -28,30 +26,28 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
 
     private int CARD_SPINNER_ID, VALUE_SPINNER_ID, COLOR_SPINNER_ID;
 
-    private AppCompatActivity listener;
+    private Popup_EditorInterface listener;
     private ArrayList<Card> cards;
     private int CODE, cardWidth, cardHeight;
     private int currentCardIndex;
     private String pileName;
 
-    private TextView pileNumber, colorText, valueText, cardText;
+    private TextView pileNumber, colorText, valueText, cardText, plus0ButtonText, plus1ButtonText, minus1ButtonText, plus2ButtonText, minus2ButtonText;
     private Spinner cardSpinner, colorSpinner, valueSpinner;
     private RelativeLayout layout;
-    private Button plus1, minus1, plus2, minus2;
+    private Button plus0, plus1, minus1, plus2, minus2, save;
 
-    private String[] values = {"A","2","3","4","5","6","7","8","9","10","11","12","13"};
+    private String[] values = {"A","2","3","4","5","6","7","8","9","10","11","12","13","X"};
     private String[] colors = {"Spar","Hjerter","Klør","Ruder"};
 
     private Card_Factory card_factory;
     private ArrayList<ImageView> cardViews;
 
-    public interface PileEditorDialog {
-        void onSave(ArrayList<Card> arrayOfCards, int CODE);
-    }
+    public Popup_PileEditor(Popup_EditorInterface listener, ArrayList<Card> cards, String pileName, int cardWidth, int cardHeight, int CODE) {
+        this.listener = listener;
 
-    public Popup_PileEditor(PileEditorDialog listener, ArrayList<Card> cards, String pileName, int cardWidth, int cardHeight, int CODE) {
-        this.listener = (AppCompatActivity) listener;
-        this.cards = cards;
+        //Important with deep copy if user decides not to save
+        this.cards = deepCopyCards(cards);
         this.CODE = CODE;
         this.pileName = pileName;
         this.cardWidth = cardWidth;
@@ -59,6 +55,13 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
 
         card_factory = new Card_Factory(this.listener);
         currentCardIndex = cards.size() - 1;
+    }
+
+    private ArrayList<Card> deepCopyCards(ArrayList<Card> cards){
+        ArrayList<Card> out = new ArrayList<>();
+        for (int i = 0; i < cards.size(); i++)
+            out.add(new Card(cards.get(i).getType(), cards.get(i).getValue()));
+        return out;
     }
 
     @Override
@@ -81,19 +84,29 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         valueText = view.findViewById(R.id.textView14);
         cardText = view.findViewById(R.id.textView15);
 
+        plus0 = view.findViewById(R.id.button0);
+        plus0ButtonText = view.findViewById(R.id.textView11);
         plus1 = view.findViewById(R.id.button4);
+        plus1ButtonText = view.findViewById(R.id.textView7);
         minus1 = view.findViewById(R.id.button5);
+        minus1ButtonText = view.findViewById(R.id.textView8);
         plus2 = view.findViewById(R.id.button6);
+        plus2ButtonText = view.findViewById(R.id.textView9);
         minus2 = view.findViewById(R.id.button7);
+        minus2ButtonText = view.findViewById(R.id.textView10);
+        save = view.findViewById(R.id.save);
+
+        plus0.setOnClickListener(this);
         plus1.setOnClickListener(this);
         minus1.setOnClickListener(this);
         plus2.setOnClickListener(this);
         minus2.setOnClickListener(this);
+        save.setOnClickListener(this);
 
         pileNumber.setText(pileName + "");
 
         //Setup card picks
-        refreshCardSpinner();
+        displayCardSpinner();
 
         //Setup value picks
         displayValueSpinner();
@@ -108,34 +121,25 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         return builder.create();
     }
 
+    private void displayCardSpinner(){
+        cardSpinner.setOnItemSelectedListener(this);
+        List<String> cardNumbers = new ArrayList<String>();
+        for (int i = 0; i < cards.size(); i++) cardNumbers.add(i+1 + "");
+        ArrayAdapter<String> cardAdapter = new ArrayAdapter<String>(listener, simple_spinner_item, cardNumbers);
+        cardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        cardSpinner.setAdapter(cardAdapter);
+        refreshCardSpinner();
+    }
+
     private void refreshCardSpinner(){
-        //If the stack is empty, the "holder" card is shown (1,0)
+        //If the stack is empty, hide this option
         if(cards.get(0).equals(new Card(1,0))){
             cardSpinner.setVisibility(View.GONE);
             cardText.setVisibility(View.GONE);
         } else {
             cardSpinner.setVisibility(View.VISIBLE);
             cardText.setVisibility(View.VISIBLE);
-
-            cardSpinner.setOnItemSelectedListener(this);
-            List<String> cardNumbers = new ArrayList<String>();
-            for (int i = 0; i < cards.size(); i++) cardNumbers.add(i+1 + "");
-            ArrayAdapter<String> cardAdapter = new ArrayAdapter<String>(listener, simple_spinner_item, cardNumbers);
-            cardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            cardSpinner.setAdapter(cardAdapter);
             cardSpinner.setSelection(currentCardIndex);
-        }
-    }
-
-    private void refreshValueSpinner(){
-        //If the stack is empty, the "holder" card is shown (1,0)
-        if(cards.get(0).equals(new Card(1,0))){
-            valueSpinner.setVisibility(View.GONE);
-            valueText.setVisibility(View.GONE);
-        } else {
-            valueSpinner.setVisibility(View.VISIBLE);
-            valueText.setVisibility(View.VISIBLE);
-            valueSpinner.setSelection(cards.get(currentCardIndex).getValue()-1);
         }
     }
 
@@ -147,15 +151,15 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         refreshValueSpinner();
     }
 
-    private void refreshColorSpinner(){
-        //If the stack is empty, the "holder" card is shown (1,0)
+    private void refreshValueSpinner(){
+        //If the stack is empty, hide this option
         if(cards.get(0).equals(new Card(1,0))){
-            colorSpinner.setVisibility(View.GONE);
-            colorText.setVisibility(View.GONE);
+            valueSpinner.setVisibility(View.GONE);
+            valueText.setVisibility(View.GONE);
         } else {
-            colorSpinner.setVisibility(View.VISIBLE);
-            colorText.setVisibility(View.VISIBLE);
-            colorSpinner.setSelection(cards.get(currentCardIndex).getType());
+            valueSpinner.setVisibility(View.VISIBLE);
+            valueText.setVisibility(View.VISIBLE);
+            valueSpinner.setSelection(cards.get(currentCardIndex).getValue()-1);
         }
     }
 
@@ -165,6 +169,18 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         colorSpinner.setAdapter(colorAdapter);
         refreshColorSpinner();
+    }
+
+    private void refreshColorSpinner(){
+        //If the stack is empty or the "back card" is chosen, hide this option
+        if(cards.get(0).equals(new Card(1,0)) || cards.get(currentCardIndex).getValue() == 14){
+            colorSpinner.setVisibility(View.GONE);
+            colorText.setVisibility(View.GONE);
+        } else {
+            colorSpinner.setVisibility(View.VISIBLE);
+            colorText.setVisibility(View.VISIBLE);
+            colorSpinner.setSelection(cards.get(currentCardIndex).getType());
+        }
     }
 
     private void refreshPile(){
@@ -182,66 +198,78 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
             rp.setMargins(10,60,10,0);
             layout.addView(cardViews.get(i),rp);
         }
+        refreshButtons();
+    }
+
+    private void refreshButtons(){
+        if(cards.get(0).equals(new Card(1,0))){
+            plus0.setVisibility(View.VISIBLE);
+            plus0ButtonText.setVisibility(View.VISIBLE);
+            plus1.setVisibility(View.GONE);
+            plus1ButtonText.setVisibility(View.GONE);
+            minus1.setVisibility(View.GONE);
+            minus1ButtonText.setVisibility(View.GONE);
+            plus2.setVisibility(View.GONE);
+            plus2ButtonText.setVisibility(View.GONE);
+            minus2.setVisibility(View.GONE);
+            minus2ButtonText.setVisibility(View.GONE);
+        } else {
+            plus0.setVisibility(View.GONE);
+            plus0ButtonText.setVisibility(View.GONE);
+            plus1.setVisibility(View.VISIBLE);
+            plus1ButtonText.setVisibility(View.VISIBLE);
+            minus1.setVisibility(View.VISIBLE);
+            minus1ButtonText.setVisibility(View.VISIBLE);
+            plus2.setVisibility(View.VISIBLE);
+            plus2ButtonText.setVisibility(View.VISIBLE);
+            minus2.setVisibility(View.VISIBLE);
+            minus2ButtonText.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onClick(View v) {
 
-        if(v == plus1){
+        if(v == save){
+            listener.onSave(cards, CODE);
+            dismiss();
+            return;
+        }
 
-            //If the stack is empty, the "holder" card is shown (1,0)
-            if(cards.get(0).equals(new Card(1,0)))
-                cards.remove(0);
+        if(v == plus0){
+            cards.remove(0);
+        }
 
-            cards.add(0, new Card(0,1));
+        if(v == plus0 || v == plus1){
             currentCardIndex = 0;
-            refreshPile();
-            refreshColorSpinner();
-            refreshValueSpinner();
-            refreshCardSpinner();
+            cards.add(0, new Card(0,1));
+        }
+
+        if(v == plus2) {
+            currentCardIndex = cards.size() - 1;
+            cards.add(new Card(0,1));
         }
 
         if(v == minus1){
             cards.remove(0);
-
-            //If the stack is empty add placeholder card
-            if(cards.size() == 0)
-                cards.add(new Card(1,0));
-
             currentCardIndex = 0;
-            refreshPile();
-            refreshColorSpinner();
-            refreshValueSpinner();
-            refreshCardSpinner();
-        }
-
-        if(v == plus2){
-
-            //If the stack is empty, the "holder" card is shown (1,0)
-            if(cards.get(0).equals(new Card(1,0)))
-                cards.remove(0);
-
-            cards.add(new Card(0,1));
-            currentCardIndex = cards.size() - 1;
-            refreshPile();
-            refreshColorSpinner();
-            refreshValueSpinner();
-            refreshCardSpinner();
         }
 
         if(v == minus2){
             cards.remove(cards.size()-1);
+            currentCardIndex = cards.size() - 1;
+        }
 
+        if(v == minus1 || v == minus2){
             //If the stack is empty add placeholder card
             if(cards.size() == 0)
                 cards.add(new Card(1,0));
-
-            currentCardIndex = cards.size() - 1;
-            refreshPile();
-            refreshColorSpinner();
-            refreshValueSpinner();
-            refreshCardSpinner();
         }
+
+        refreshPile();
+        refreshColorSpinner();
+        refreshValueSpinner();
+        refreshCardSpinner();
     }
 
     @Override
@@ -254,6 +282,7 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
 
         if(parent.getId() == VALUE_SPINNER_ID){
             cards.get(currentCardIndex).setValue(position+1);
+            refreshColorSpinner();
             refreshPile();
         }
 

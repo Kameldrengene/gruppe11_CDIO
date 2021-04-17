@@ -20,9 +20,9 @@
 
     <Spinner
         android:id="@+id/spinnerPickCardNumber"
-        android:layout_width="85dp"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:dropDownWidth="85dp"
+        android:dropDownWidth="55dp"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toEndOf="@+id/textView15"
         app:layout_constraintTop_toBottomOf="@+id/pileNumber" />
@@ -56,17 +56,17 @@
 
     <Spinner
         android:id="@+id/spinnerPickColor"
-        android:dropDownWidth="wrap_content"
-        android:layout_width="wrap_content"
         android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:dropDownWidth="65dp"
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toEndOf="@+id/textView13"
         app:layout_constraintTop_toBottomOf="@+id/spinnerPickCardNumber" />
 
     <Spinner
         android:id="@+id/spinnerPickValue"
-        android:dropDownWidth="85dp"
-        android:layout_width="85dp"
+        android:dropDownWidth="55dp"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toEndOf="@+id/textView14"
@@ -79,7 +79,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerPickValue" />
+        app:layout_constraintTop_toBottomOf="@+id/save" />
 
     <View
         android:layout_width="match_parent"
@@ -99,6 +99,33 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/button0"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/roundedbutton"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        app:layout_constraintStart_toStartOf="@+id/button4"
+        app:layout_constraintTop_toTopOf="@id/pile"
+        app:layout_constraintBottom_toBottomOf="@+id/pile"/>
+
+    <TextView
+        android:id="@+id/textView11"
+        android:includeFontPadding="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+"
+        android:elevation="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/button0"
+        app:layout_constraintEnd_toEndOf="@+id/button0"
+        app:layout_constraintStart_toStartOf="@+id/button0"
+        app:layout_constraintTop_toTopOf="@+id/button0" />
 
     <Button
         android:id="@+id/button4"
@@ -202,7 +229,15 @@
         app:layout_constraintStart_toStartOf="@+id/button7"
         app:layout_constraintTop_toTopOf="@+id/button7" />
 
-
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/secondarydark"
+        android:text="Gem"
+        app:layout_constraintStart_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPickValue" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

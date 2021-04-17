@@ -111,4 +111,9 @@ public class Pile {
         out.addAll(shownCards);
         return out;
     }
+
+    public void setCardsInSequence(ArrayList<Card> cards){
+        shownCards = cards;
+        hiddenCards.clear();
+    }
 }

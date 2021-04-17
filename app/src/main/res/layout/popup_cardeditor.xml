@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/pileNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Bunke 2"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kulør:"
+        app:layout_constraintBottom_toBottomOf="@+id/spinnerPickColor"
+        app:layout_constraintStart_toStartOf="@+id/pileNumber"
+        app:layout_constraintTop_toTopOf="@+id/spinnerPickColor" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Værdi:"
+        app:layout_constraintBottom_toBottomOf="@+id/spinnerPickValue"
+        app:layout_constraintStart_toStartOf="@+id/pileNumber"
+        app:layout_constraintTop_toTopOf="@+id/spinnerPickValue" />
+
+    <Spinner
+        android:id="@+id/spinnerPickColor"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:dropDownWidth="65dp"
+        app:layout_constraintStart_toEndOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/pileNumber" />
+
+    <Spinner
+        android:id="@+id/spinnerPickValue"
+        android:dropDownWidth="55dp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPickColor" />
+
+    <View
+        android:id="@+id/spacerBottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/save" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/pile" />
+
+    <RelativeLayout
+        android:id="@+id/pile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintStart_toEndOf="@+id/pileNumber"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/plus"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/roundedbutton"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/pile"
+        app:layout_constraintStart_toEndOf="@+id/pile"
+        app:layout_constraintTop_toTopOf="@+id/pile" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:includeFontPadding="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+"
+        android:elevation="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/plus"
+        app:layout_constraintEnd_toEndOf="@+id/plus"
+        app:layout_constraintStart_toStartOf="@+id/plus"
+        app:layout_constraintTop_toTopOf="@+id/plus" />
+
+    <Button
+        android:id="@+id/minus"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/roundedbutton"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        app:layout_constraintStart_toEndOf="@+id/plus"
+        app:layout_constraintTop_toTopOf="@id/pile"
+        app:layout_constraintBottom_toBottomOf="@id/pile"/>
+
+    <TextView
+        android:id="@+id/textView10"
+        android:includeFontPadding="false"
+        android:layout_marginBottom="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textSize="38sp"
+        android:elevation="10dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/minus"
+        app:layout_constraintEnd_toEndOf="@+id/minus"
+        app:layout_constraintStart_toStartOf="@+id/minus"
+        app:layout_constraintTop_toTopOf="@+id/minus" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/secondarydark"
+        android:text="Gem"
+        app:layout_constraintStart_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPickValue" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

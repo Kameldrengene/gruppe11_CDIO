@@ -12,7 +12,11 @@ public class GameBoard {
     private int deckPointer;
     private HashMap<Integer, Pile> spaces;
 
-    public GameBoard() {
+    private static GameBoard instance = new GameBoard();
+    public static GameBoard getInstance(){ return instance; }
+
+    //Singleton
+    private GameBoard() {
         setUpGame();
     }
 

@@ -1,13 +1,9 @@
 package com.example.gruppe11_cdio;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.text.SimpleDateFormat;
-import android.database.Cursor;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -37,13 +33,28 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class GameActivity extends AppCompatActivity implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls, View.OnClickListener, Popup_PileEditor.PileEditorDialog {
+//todo man skal kunne ændre i alle piles (ikke kun sequences)
+//todo hvordan skal setCardsInSequence fungerer?
+//todo tiden og turen på spilskærmen skal opdates
+//todo rettigheder mht. kamera
+//todo rediger skal kun virke når man har trykket på rediger
+//todo der mangler en tilbageknap under rediger
+//todo gameboard skal være singleton
+//todo skal man kunne start nyt spil eller er det altid det samme?
+//todo register arbejdstid (jira)
+//todo hvad er maks kort der kan være i piles?
 
-    int NUMBER_OF_SPACES = 7;
-    int NUMBER_OF_FINISH_PLACES = 4;
-    int NUMBER_OF_LAYOUTS = 13;
-    int CARD_HEIGHT_IN_DP = 75;
-    int EDIT_PILE_CODE = 0;
+//Card(?,14) == card back
+//Card(1,0) == empty card
+public class GameActivity extends Popup_EditorInterface implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls, View.OnClickListener {
+
+    final int NUMBER_OF_SPACES = 7;
+    final int NUMBER_OF_FINISH_PLACES = 4;
+    final int NUMBER_OF_LAYOUTS = NUMBER_OF_SPACES + NUMBER_OF_FINISH_PLACES + 2;
+    final int CARD_HEIGHT_IN_DP = 75;
+    final int EDIT_PILE_CODE = 0;
+    final int EDIT_FINISH_CODE = 1;
+    final int EDIT_DECK_CODE = 2;
     int onClickLayoutIndex;
 
     int width;
@@ -54,7 +65,7 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
 
     LayoutHolder layouts[] = new LayoutHolder[NUMBER_OF_LAYOUTS];
     Card_Factory card_factory;
-    GameBoard gameBoard = new GameBoard();
+    GameBoard gameBoard = GameBoard.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +84,6 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
         dimensionInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, cardHeightInDp, getResources().getDisplayMetrics());
 
         card_factory = new Card_Factory(this);
-
-        //todo skal fjernes når vi får et rigtgit obekt!
-        gameBoard.draw();
 
         for (int i = 0; i < NUMBER_OF_LAYOUTS; i++) {
             layouts[i] = new LayoutHolder();
@@ -97,21 +105,20 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
         layouts[6].setLayout(findViewById(R.id.relativeLayout7));
         layouts[6].setName("Bunke 7");
         layouts[7].setLayout(findViewById(R.id.holder1));
-        layouts[7].setName("Holder 1");
+        layouts[7].setName("Holder 4");
         layouts[8].setLayout(findViewById(R.id.holder2));
-        layouts[8].setName("Holder 2");
+        layouts[8].setName("Holder 3");
         layouts[9].setLayout(findViewById(R.id.holder3));
-        layouts[9].setName("Holder 3");
+        layouts[9].setName("Holder 2");
         layouts[10].setLayout(findViewById(R.id.holder4));
-        layouts[10].setName("Holder 4");
-        layouts[11].setLayout(findViewById(R.id.pile));
-        layouts[11].setName("Nyeste kort");
-        layouts[12].setLayout(findViewById(R.id.open));
+        layouts[10].setName("Holder 1");
+        layouts[11].setLayout(findViewById(R.id.open));
+        layouts[11].setName("Bunken");
+        layouts[12].setLayout(findViewById(R.id.pile));
         layouts[12].setName("Bunken");
 
-        for (int i = 0; i < NUMBER_OF_LAYOUTS; i++) {
+        for (int i = 0; i < NUMBER_OF_LAYOUTS; i++)
             layouts[i].getLayout().setOnClickListener(this);
-        }
 
         displayBoard();
 
@@ -150,88 +157,70 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
         String fileName = formatter.format(now) + ".jpg";
 
         // Sender billede til vores backend i nodejs
-                OkHttpClient client = new OkHttpClient().newBuilder()
-                        .build();
-                MediaType mediaType = MediaType.parse("text/plain");
-                RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("file",fileName,
-                                RequestBody.create(MediaType.parse("application/octet-stream"),
-                                        finalFile))
-                        .build();
-                Request request = new Request.Builder()
-                        .url("http://cdio.isik.dk:5000")
-                        .method("POST", body)
-                        .build();
-                bgThread.execute(()->{
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("file",fileName,
+                        RequestBody.create(MediaType.parse("application/octet-stream"),
+                                finalFile))
+                .build();
+        Request request = new Request.Builder()
+                .url("http://cdio.isik.dk:5000")
+                .method("POST", body)
+                .build();
+        bgThread.execute(()->{
+            try {
+                Response response = client.newCall(request).execute();
+                String responseMsg = response.body().string();
 
-                    try {
-                        Response response = client.newCall(request).execute();
-                        String responseMsg = response.body().string();
-
-                        uiThread.post(()->{
-                            Toast.makeText(this,responseMsg,Toast.LENGTH_LONG).show();
-                        });
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                uiThread.post(()->{
+                    Toast.makeText(this,responseMsg,Toast.LENGTH_LONG).show();
                 });
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void displayBoard(){
 
-        ArrayList<Card> currentArrayOfCards;
-
         //First we set the spaces
-        HashMap<Integer, Pile> spaces = gameBoard.getSpaces();
-
-        for (int i = 0; i < NUMBER_OF_SPACES; i++) {
-            displayPile(spaces.get(i).getCardsInSequence(), layouts[i]);
-        }
+        for (int i = 0; i < NUMBER_OF_SPACES; i++)
+            displayPile(getCardsFromPile(i), layouts[i]);
 
         //Then the finish spaces
-        HashMap<Integer, ArrayList<Card>> finishSpaces = gameBoard.getFinSpaces();
+        for (int i = 0; i < NUMBER_OF_FINISH_PLACES; i++)
+            displayPile(getTopCardFromFinishSpace(i), layouts[NUMBER_OF_SPACES + i]);
 
-        for (int i = 0; i < NUMBER_OF_FINISH_PLACES; i++) {
-            currentArrayOfCards = finishSpaces.get(i);
-
-            if(currentArrayOfCards.size() == 0)
-                displayPile(new Card(1,0), layouts[NUMBER_OF_SPACES+i]);
-            else
-                displayPile(finishSpaces.get(i).get(i), layouts[NUMBER_OF_SPACES+i]);
-        }
-
-        //And then deck and open card
-        Card openCard = gameBoard.getDeck().get(gameBoard.getDeckPointer());
-        displayPile(new Card(0,0), layouts[NUMBER_OF_SPACES+NUMBER_OF_FINISH_PLACES]);
-        displayPile(openCard, layouts[NUMBER_OF_SPACES+NUMBER_OF_FINISH_PLACES+1]);
-
+        //And then the deck and open card
+        displayPile(getTopCardFromDeck(), layouts[NUMBER_OF_SPACES + NUMBER_OF_FINISH_PLACES]);
+        displayPile(new Card(0,0), layouts[NUMBER_OF_SPACES + NUMBER_OF_FINISH_PLACES + 1]);
     }
 
     private void displayPile(ArrayList<Card> arrayOfCards, LayoutHolder layout){
         ArrayList<ImageView> cardViews = new ArrayList<>();
 
-        for (int i = 0; i < arrayOfCards.size(); i++) {
+        layout.getLayout().removeAllViews();
+
+        for (int i = 0; i < arrayOfCards.size(); i++)
             cardViews.add(card_factory.createCard(arrayOfCards.get(i)));
-        }
 
         for (int i = 0; i < cardViews.size() ; i++) {
             RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(width/8, dimensionInDp);
-            if(i==0){
-                rp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            }else{
-                rp.addRule(RelativeLayout.ALIGN_TOP, cardViews.get(i-1).getId());
-            }
+            if(i==0) rp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            else rp.addRule(RelativeLayout.ALIGN_TOP, cardViews.get(i-1).getId());
+
             rp.setMargins(10,40,10,0);
             layout.getLayout().addView(cardViews.get(i),rp);
         }
     }
 
     private void displayPile(Card card, LayoutHolder layout){
-
         ImageView cardView = card_factory.createCard(card);
+
+        layout.getLayout().removeAllViews();
 
         RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(width/8, dimensionInDp);
         rp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -243,7 +232,7 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
     @Override
     public void onClick(View v) {
 
-        //Find out pile/layout was pressed
+        //Find out what pile/layout was pressed
         onClickLayoutIndex = 0;
         for (int i = 0; i < layouts.length; i++) {
             if(v == layouts[i].getLayout()){
@@ -252,34 +241,74 @@ public class GameActivity extends AppCompatActivity implements Frag_GameControls
             }
         }
 
-        Popup_PileEditor pileEditor = new Popup_PileEditor(this, gameBoard.getSpaces().get(onClickLayoutIndex).getCardsInSequence(), layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_PILE_CODE);
-        pileEditor.show(this.getSupportFragmentManager(), null);
+        //If a pile was clicked
+        if(onClickLayoutIndex <= 6){
+            ArrayList<Card> cardsToShow = getCardsFromPile(onClickLayoutIndex);
+            Popup_PileEditor pileEditor = new Popup_PileEditor(this, cardsToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_PILE_CODE);
+            pileEditor.show(this.getSupportFragmentManager(), null);
+
+        //If a finish space was clicked
+        } else if(onClickLayoutIndex <= 10) {
+            Card cardToShow  = getTopCardFromFinishSpace(onClickLayoutIndex - NUMBER_OF_SPACES);
+            Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_FINISH_CODE);
+            cardEditor.show(this.getSupportFragmentManager(), null);
+
+        //If the deck was clicked
+        } else if(onClickLayoutIndex == 11){
+            Card cardToShow = getTopCardFromDeck();
+            Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_DECK_CODE);
+            cardEditor.show(this.getSupportFragmentManager(), null);
+        }
     }
 
     @Override
+    //Will be called if one of the piles were edited
     public void onSave(ArrayList<Card> arrayOfCards, int CODE) {
-
+        if(CODE == EDIT_PILE_CODE)
+            gameBoard.getSpaces().get(onClickLayoutIndex).setCardsInSequence(arrayOfCards);
+        displayBoard();
     }
 
-    public String getRealPathFromURI(Uri uri) {
-        String path = "";
-        if (getContentResolver() != null) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            if (cursor != null) {
-                cursor.moveToFirst();
-                int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-                path = cursor.getString(idx);
-                cursor.close();
-            }
+    @Override
+    //Will be called if the deck or finish spaces was edited
+    public void onSave(Card card, int CODE) {
+        Card cardToUpdate;
+        if(CODE == EDIT_FINISH_CODE) cardToUpdate = getTopCardFromFinishSpace(onClickLayoutIndex - NUMBER_OF_SPACES);
+        else cardToUpdate = getTopCardFromDeck();
+
+        cardToUpdate.setType(card.getType());
+        cardToUpdate.setValue(card.getValue());
+        displayBoard();
+    }
+
+    //Protects against null
+    private Card getTopCardFromDeck(){
+        if(gameBoard.getDeckPointer() == -1){
+            gameBoard.getDeck().add(new Card(1,0));
+            gameBoard.setDeckPointer(0);
         }
-        return path;
+        return gameBoard.getDeck().get(gameBoard.getDeckPointer());
     }
 
+    //Protects against null
+    private Card getTopCardFromFinishSpace(int i){
+        ArrayList<Card> cards = gameBoard.getFinSpaces().get(i);
+        //todo er det ok ift. algoritmen der beregner næste træk?
+        if(cards.size() == 0) cards.add(new Card(1,0));
+        return cards.get(0);
+    }
+
+    //Protects against null
+    private ArrayList<Card> getCardsFromPile(int i){
+        ArrayList<Card> cards = gameBoard.getSpaces().get(i).getCardsInSequence();
+        //todo er det ok ift. algoritmen der beregner næste træk?
+        if(cards.size() == 0) cards.add(new Card(1,0));
+        return cards;
+    }
 }
 
 //Holds a relevative layout along with other relevant information about the layout
 class LayoutHolder{
-
     RelativeLayout layout;
     String name;
 

@@ -7,7 +7,7 @@ import com.example.gruppe11_cdio.R;
 
 
 public class Card_Factory {
-    int [][] cardMap =  new int[4][14];
+    int [][] cardMap =  new int[4][15];
     Context context;
 
     public Card_Factory(Context context) {
@@ -68,6 +68,10 @@ public class Card_Factory {
         cardMap[3][11] = R.drawable.diamonds_j;
         cardMap[3][12] = R.drawable.diamonds_q;
         cardMap[3][13] = R.drawable.diamonds_k;
+        cardMap[0][14] = R.drawable.card_back;
+        cardMap[1][14] = R.drawable.card_back;
+        cardMap[2][14] = R.drawable.card_back;
+        cardMap[3][14] = R.drawable.card_back;
     }
 
     public ImageView createCard(Card card){
