@@ -33,22 +33,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reglerOkButton = reglerView.findViewById(R.id.alertButton);
         reglerOkButton.setOnClickListener(this);
         title.setText("Velkommen til 7-kabale");
-        body.setText("" +
-                "Denne app bruges til at hjælpe\n" +
-                "med 7-kabale.\n" +
-                "Du kan starte appen i hvilken\n" +
-                "som helst tidspunkt i et spil.\n" +
-                "Du tager så et billede ved at\n" +
-                "trykke på knappen “Tag billede”\n" +
-                "og appen lærer din situation at\n" +
-                "kende.\n" +
-                "Herefter, tager du et nyt billede\n" +
-                "efter hvert træk du tager.\n" +
-                "Hvis du vælger at stoppe med at\n" +
-                "bruge hjælpen, skal du gå ud af\n" +
-                "spillet ved at trykke på\n" +
-                "tilbage-pilen. Kabalen kan\n" +
-                "startes igen, hvornår som helst.");
+        body.setText("\nDenne app bruges til at hjælpe med 7-kabale. " +
+                "\n\nDu kan starte appen i hvilken " +
+                "som helst tidspunkt i et spil. " +
+                "Du tager så et billede ved at " +
+                "trykke på knappen “Tag billede” " +
+                "og appen lærer din situation at " +
+                "kende. " +
+                "Herefter, tager du et nyt billede " +
+                "efter hvert træk du tager. " +
+                "Hvis du vælger at stoppe med at " +
+                "bruge hjælpen, skal du gå ud af " +
+                "spillet ved at trykke på " +
+                "tilbage-pilen. Kabalen kan " +
+                "startes igen, hvornår som helst. ");
         alertDialog.setContentView(reglerView);
 
     }

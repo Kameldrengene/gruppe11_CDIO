@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:elevation="10dp"
-        android:text="Næste billede"
+        android:text="Nyt billede"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/button2"
         app:layout_constraintEnd_toStartOf="@+id/button2"

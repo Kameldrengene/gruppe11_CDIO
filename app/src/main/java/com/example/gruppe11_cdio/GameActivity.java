@@ -33,15 +33,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
 //todo hvordan skal setCardsInSequence fungerer?
 //todo hvad er maks kort der kan være i piles?
 //todo er det ok ift. algoritmen der beregner næste træk? (getTopCardFromFinishSpace, getTopCardFromPile)
 
-//todo tiden og turen på spilskærmen skal opdates
-//todo rettigheder mht. kamera
-//todo der mangler en tilbageknap under rediger
-//todo skal man kunne start nyt spil eller er det altid det samme?
+//todo tiden og turen på spilskærmen skal måske bare væk?
+//todo ville være nice med en indikator på, at kortene nu kan ændres
+//todo evt. load animation mens billede uploades og analyseres på server
 
 //Card(?,14) == card back
 //Card(1,0) == empty card
@@ -123,10 +121,8 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
         displayBoard();
 
-        //Load controls
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.framelayout, new Frag_GameControls())
-                .commit();
+        //Load buttons
+        goToControls();
     }
 
     @Override
