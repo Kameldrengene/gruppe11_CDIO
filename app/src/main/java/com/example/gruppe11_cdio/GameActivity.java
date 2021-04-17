@@ -33,16 +33,15 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-//todo man skal kunne ændre i alle piles (ikke kun sequences)
+
 //todo hvordan skal setCardsInSequence fungerer?
+//todo hvad er maks kort der kan være i piles?
+//todo er det ok ift. algoritmen der beregner næste træk? (getTopCardFromFinishSpace, getTopCardFromPile)
+
 //todo tiden og turen på spilskærmen skal opdates
 //todo rettigheder mht. kamera
-//todo rediger skal kun virke når man har trykket på rediger
 //todo der mangler en tilbageknap under rediger
-//todo gameboard skal være singleton
 //todo skal man kunne start nyt spil eller er det altid det samme?
-//todo register arbejdstid (jira)
-//todo hvad er maks kort der kan være i piles?
 
 //Card(?,14) == card back
 //Card(1,0) == empty card
@@ -55,6 +54,8 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     final int EDIT_PILE_CODE = 0;
     final int EDIT_FINISH_CODE = 1;
     final int EDIT_DECK_CODE = 2;
+
+    boolean enableEdit = false;
     int onClickLayoutIndex;
 
     int width;
@@ -137,6 +138,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
     @Override
     public void goEdit() {
+        enableEdit = true;
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, new Frag_GameEdit())
                 .commit();
@@ -144,6 +146,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
     @Override
     public void goToControls() {
+        enableEdit = false;
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, new Frag_GameControls())
                 .commit();
@@ -231,33 +234,34 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
     @Override
     public void onClick(View v) {
-
-        //Find out what pile/layout was pressed
-        onClickLayoutIndex = 0;
-        for (int i = 0; i < layouts.length; i++) {
-            if(v == layouts[i].getLayout()){
-                onClickLayoutIndex = i;
-                break;
+        if(enableEdit){
+            //Find out what pile/layout was pressed
+            onClickLayoutIndex = 0;
+            for (int i = 0; i < layouts.length; i++) {
+                if(v == layouts[i].getLayout()){
+                    onClickLayoutIndex = i;
+                    break;
+                }
             }
-        }
 
-        //If a pile was clicked
-        if(onClickLayoutIndex <= 6){
-            ArrayList<Card> cardsToShow = getCardsFromPile(onClickLayoutIndex);
-            Popup_PileEditor pileEditor = new Popup_PileEditor(this, cardsToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_PILE_CODE);
-            pileEditor.show(this.getSupportFragmentManager(), null);
+            //If a pile was clicked
+            if(onClickLayoutIndex <= 6){
+                ArrayList<Card> cardsToShow = getCardsFromPile(onClickLayoutIndex);
+                Popup_PileEditor pileEditor = new Popup_PileEditor(this, cardsToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_PILE_CODE);
+                pileEditor.show(this.getSupportFragmentManager(), null);
 
-        //If a finish space was clicked
-        } else if(onClickLayoutIndex <= 10) {
-            Card cardToShow  = getTopCardFromFinishSpace(onClickLayoutIndex - NUMBER_OF_SPACES);
-            Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_FINISH_CODE);
-            cardEditor.show(this.getSupportFragmentManager(), null);
+                //If a finish space was clicked
+            } else if(onClickLayoutIndex <= 10) {
+                Card cardToShow  = getTopCardFromFinishSpace(onClickLayoutIndex - NUMBER_OF_SPACES);
+                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_FINISH_CODE);
+                cardEditor.show(this.getSupportFragmentManager(), null);
 
-        //If the deck was clicked
-        } else if(onClickLayoutIndex == 11){
-            Card cardToShow = getTopCardFromDeck();
-            Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_DECK_CODE);
-            cardEditor.show(this.getSupportFragmentManager(), null);
+                //If the deck was clicked
+            } else if(onClickLayoutIndex == 11){
+                Card cardToShow = getTopCardFromDeck();
+                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_DECK_CODE);
+                cardEditor.show(this.getSupportFragmentManager(), null);
+            }
         }
     }
 
@@ -293,7 +297,6 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     //Protects against null
     private Card getTopCardFromFinishSpace(int i){
         ArrayList<Card> cards = gameBoard.getFinSpaces().get(i);
-        //todo er det ok ift. algoritmen der beregner næste træk?
         if(cards.size() == 0) cards.add(new Card(1,0));
         return cards.get(0);
     }
@@ -301,7 +304,6 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     //Protects against null
     private ArrayList<Card> getCardsFromPile(int i){
         ArrayList<Card> cards = gameBoard.getSpaces().get(i).getCardsInSequence();
-        //todo er det ok ift. algoritmen der beregner næste træk?
         if(cards.size() == 0) cards.add(new Card(1,0));
         return cards;
     }

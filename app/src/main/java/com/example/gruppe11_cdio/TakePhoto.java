@@ -43,14 +43,9 @@ public class TakePhoto extends AppCompatActivity {
     }
 
     private void takeUserPhoto(){
-        //Check permissions. If fine else go ahead and take photo, otherwise ask for permission
+        //Check permissions. If fine go ahead and take photo, otherwise ask for permission
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)){
-                Toast.makeText(this, "Mangler kameratilladelse", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-            else
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
         } else {
             dispatchTakePictureIntent();
         }
@@ -61,11 +56,10 @@ public class TakePhoto extends AppCompatActivity {
         if(requestCode == CAMERA_REQUEST_CODE){
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 takeUserPhoto();
-            else{
+            else {
                 Toast.makeText(this, "Mangler kameratilladelse", Toast.LENGTH_SHORT).show();
                 finish();
             }
-
         }
     }
 
@@ -73,14 +67,12 @@ public class TakePhoto extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
-
             Toast.makeText(this, "Image saved", Toast.LENGTH_SHORT).show();
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", currentPhotoPath);
             setResult(Activity.RESULT_OK, returnIntent);
             inProgress = false;
             finish();
-
         }
     }
 
@@ -120,5 +112,4 @@ public class TakePhoto extends AppCompatActivity {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
 }
