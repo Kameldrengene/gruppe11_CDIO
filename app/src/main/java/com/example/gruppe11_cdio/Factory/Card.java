@@ -4,7 +4,7 @@ import androidx.annotation.Nullable;
 
 public class Card {
     private int     type;       //0: spar; 1: Hjerter; 2: Klør; 3: Ruder;
-    private int     value;
+    private int     value;      //1: A; 2: 2; ... 13: King;
 
     public Card(int type, int value){
         this.type = type;
@@ -45,4 +45,10 @@ public class Card {
         else
             return false;
     }
+
+    public Card deepCopy() {
+        Card card = new Card(this.type, this.value);
+        return card;
+    }
+
 }

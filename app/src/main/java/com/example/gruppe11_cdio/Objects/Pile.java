@@ -113,7 +113,18 @@ public class Pile {
     }
 
     public void setCardsInSequence(ArrayList<Card> cards){
-        shownCards = cards;
+        clearCards();
+
+        for (int i = 0; i < cards.size(); i++) {
+            if(cards.get(i).equals(new Card(1,0)))
+                hiddenCards.add(cards.get(i));
+            else shownCards.add(cards.get(i));
+        }
+
+    }
+
+    public void clearCards(){
+        shownCards.clear();
         hiddenCards.clear();
     }
 }

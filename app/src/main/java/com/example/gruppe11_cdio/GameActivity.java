@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.gruppe11_cdio.Factory.Card;
 import com.example.gruppe11_cdio.Factory.Card_Factory;
 import com.example.gruppe11_cdio.Objects.GameBoard;
+import com.example.gruppe11_cdio.Objects.Pile;
 
 
 import java.io.File;
@@ -32,10 +33,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-//todo hvordan skal setCardsInSequence fungerer?
-//todo hvad er maks kort der kan være i piles?
-//todo er det ok ift. algoritmen der beregner næste træk? (getTopCardFromFinishSpace, getTopCardFromPile)
 
 //todo evt. load animation mens billede uploades og analyseres på server
 //todo spillet skal være i et scroll view
@@ -281,44 +278,81 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     @Override
     //Will be called if one of the piles were edited
     public void onSave(ArrayList<Card> arrayOfCards, int CODE) {
-        if(CODE == EDIT_PILE_CODE)
-            gameBoard.getSpaces().get(onClickLayoutIndex).setCardsInSequence(arrayOfCards);
+        if(CODE == EDIT_PILE_CODE){
+            Pile pile = gameBoard.getSpaces().get(onClickLayoutIndex);
+
+            //If the new array is empty
+            if(arrayOfCards.get(0).equals(new Card(1,0))) pile.clearCards();
+            else pile.setCardsInSequence(arrayOfCards);
+        }
+
         displayBoard();
     }
 
     @Override
-    //Will be called if the deck or finish spaces was edited
+    //Will be called if the deck or a finish space was edited
     public void onSave(Card card, int CODE) {
-        Card cardToUpdate;
-        if(CODE == EDIT_FINISH_CODE) cardToUpdate = getTopCardFromFinishSpace(onClickLayoutIndex - NUMBER_OF_SPACES);
-        else cardToUpdate = getTopCardFromDeck();
 
-        cardToUpdate.setType(card.getType());
-        cardToUpdate.setValue(card.getValue());
+        //Check is the new card is empty
+        Boolean cardIsEmpty = false;
+        if(card.equals(new Card(1,0))) cardIsEmpty = true;
+
+        //If a finish space was edited
+        if(CODE == EDIT_FINISH_CODE) {
+            ArrayList<Card> cards = gameBoard.getFinSpaces().get(onClickLayoutIndex - NUMBER_OF_SPACES);
+            if(cards.size() > 0) cards.remove(0);
+            if(cardIsEmpty) cards.clear();
+            else cards.add(card);
+
+        //Else the deck was edited
+        } else {
+            ArrayList<Card> cards = gameBoard.getDeck();
+            if(gameBoard.getDeckPointer() > -1) {
+                cards.remove(0);
+                gameBoard.setDeckPointer(gameBoard.getDeckPointer() - 1);
+            }
+            if(cardIsEmpty){
+                cards.clear();
+                gameBoard.setDeckPointer(-1);
+            }
+            else {
+                cards.add(card);
+                gameBoard.setDeckPointer(gameBoard.getDeckPointer() + 1);
+            }
+        }
+
         displayBoard();
     }
 
-    //Protects against null
+    //Protects against null. Returns deep copy
     private Card getTopCardFromDeck(){
-        if(gameBoard.getDeckPointer() == -1){
-            gameBoard.getDeck().add(new Card(1,0));
-            gameBoard.setDeckPointer(0);
-        }
-        return gameBoard.getDeck().get(gameBoard.getDeckPointer());
+        if(gameBoard.getDeckPointer() == -1) return new Card(1,0);
+        else return gameBoard.getDeck().get(gameBoard.getDeckPointer()).deepCopy();
     }
 
-    //Protects against null
+    //Protects against null. Returns deep copy
     private Card getTopCardFromFinishSpace(int i){
         ArrayList<Card> cards = gameBoard.getFinSpaces().get(i);
-        if(cards.size() == 0) cards.add(new Card(1,0));
-        return cards.get(0);
+        if(cards.size() == 0) return new Card(1,0);
+        else return cards.get(0).deepCopy();
     }
 
-    //Protects against null
+    //Protects against null. Returns deep copy
     private ArrayList<Card> getCardsFromPile(int i){
         ArrayList<Card> cards = gameBoard.getSpaces().get(i).getCardsInSequence();
-        if(cards.size() == 0) cards.add(new Card(1,0));
-        return cards;
+        if(cards.size() == 0){
+            cards = new ArrayList<>();
+            cards.add(new Card(1,0));
+            return cards;
+        }
+        else return deepCopyCards(cards);
+    }
+
+    private ArrayList<Card> deepCopyCards(ArrayList<Card> cards){
+        ArrayList<Card> out = new ArrayList<>();
+        for (int i = 0; i < cards.size(); i++)
+            out.add(new Card(cards.get(i).getType(), cards.get(i).getValue()));
+        return out;
     }
 }
 

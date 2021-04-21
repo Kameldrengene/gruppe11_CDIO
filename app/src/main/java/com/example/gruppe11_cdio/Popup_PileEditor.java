@@ -53,7 +53,7 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     public Popup_PileEditor(Popup_EditorInterface listener, ArrayList<Card> cards, String pileName, int pileIndex, int cardWidth, int cardHeight, int CODE) {
         this.listener = listener;
 
-        //Important with deep copy if user decides not to save
+        //Best practice with deep copy if user decides not to save
         this.cards = deepCopyCards(cards);
         this.CODE = CODE;
         this.pileName = pileName;
@@ -286,6 +286,10 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
 
         if(v == save){
             listener.onSave(cards, CODE);
+
+            System.out.println(cards.get(cards.size()-1).getType());
+            System.out.println(cards.get(cards.size()-1).getValue());
+
             dismiss();
             return;
         }
@@ -343,7 +347,8 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
 
         if(v == minus2){
             cards.remove(cards.size()-1);
-            currentCardIndex = cards.size() - 1;
+            if(cards.size() == 0) currentCardIndex = 0;
+            else currentCardIndex = cards.size() - 1;
         }
 
         if(v == minus1 || v == minus2){

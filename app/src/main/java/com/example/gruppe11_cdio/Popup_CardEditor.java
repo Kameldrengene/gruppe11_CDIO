@@ -42,7 +42,7 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
     public Popup_CardEditor(Popup_EditorInterface listener, Card card, String pileName, int cardWidth, int cardHeight, int CODE) {
         this.listener = listener;
 
-        //Important with deep copy if user decides not to save
+        //Best practice with deep copy if user decides not to save
         this.card = new Card(card.getType(), card.getValue());
         this.CODE = CODE;
         this.pileName = pileName;

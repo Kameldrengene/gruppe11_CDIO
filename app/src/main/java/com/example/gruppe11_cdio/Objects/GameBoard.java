@@ -9,7 +9,7 @@ import com.example.gruppe11_cdio.Factory.Card;
 public class GameBoard {
     private HashMap<Integer, ArrayList<Card>> finSpaces; //key is type: 0: spar; 1: Hjerter; 2: Klør; 3: Ruder;
     private ArrayList<Card> deck;
-    private int deckPointer;
+    private int deckPointer; // 0 is the top card
     private HashMap<Integer, Pile> spaces;
 
     private static GameBoard instance = new GameBoard();
