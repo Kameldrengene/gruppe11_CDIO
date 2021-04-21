@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.gruppe11_cdio.Factory.Card;
@@ -28,8 +30,9 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
 
     private Popup_EditorInterface listener;
     private ArrayList<Card> cards;
-    private int CODE, cardWidth, cardHeight;
+    private int CODE, cardWidth, cardHeight, pileIndex;
     private int currentCardIndex;
+    private int MAX_SHOWN_CARDS = 13;
     private String pileName;
 
     private TextView pileNumber, colorText, valueText, cardText, plus0ButtonText, plus1ButtonText, minus1ButtonText, plus2ButtonText, minus2ButtonText;
@@ -43,13 +46,14 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     private Card_Factory card_factory;
     private ArrayList<ImageView> cardViews;
 
-    public Popup_PileEditor(Popup_EditorInterface listener, ArrayList<Card> cards, String pileName, int cardWidth, int cardHeight, int CODE) {
+    public Popup_PileEditor(Popup_EditorInterface listener, ArrayList<Card> cards, String pileName, int pileIndex, int cardWidth, int cardHeight, int CODE) {
         this.listener = listener;
 
         //Important with deep copy if user decides not to save
         this.cards = deepCopyCards(cards);
         this.CODE = CODE;
         this.pileName = pileName;
+        this.pileIndex = pileIndex;
         this.cardWidth = cardWidth;
         this.cardHeight = cardHeight;
 
@@ -238,11 +242,40 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
 
         if(v == plus0){
             cards.remove(0);
-        }
-
-        if(v == plus0 || v == plus1){
             currentCardIndex = 0;
             cards.add(0, new Card(0,1));
+        }
+
+        if(v == plus1){
+            Card CardToAdd = null;
+
+           //Is there room for more cards?
+            if(cards.size() < pileIndex + MAX_SHOWN_CARDS){
+
+                //Does the new card *have* to be hidden?
+                if(cards.get(0).getValue() == 14)
+
+                    //Is it legal to add another hidden card?
+                    if(getNumberOfHiddenCards() < pileIndex)
+                        CardToAdd = new Card(0,14);
+                    else illegalChange("For mange skjulte kort");
+
+                //Is it legal to add another shown card?
+                else if(getNumberOfShownCards() < MAX_SHOWN_CARDS)
+                    CardToAdd = new Card(0,1);
+
+                //Is it legal to add another hidden card?
+                else if(getNumberOfHiddenCards() < pileIndex)
+                    CardToAdd = new Card(0,14);
+
+                else illegalChange("For mange viste kort");
+
+            } else illegalChange("For mange kort");
+
+            if(CardToAdd != null){
+                currentCardIndex = 0;
+                cards.add(0, CardToAdd);
+            }
         }
 
         if(v == plus2) {
@@ -269,7 +302,7 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         refreshPile();
         refreshColorSpinner();
         refreshValueSpinner();
-        refreshCardSpinner();
+        displayCardSpinner();
     }
 
     @Override
@@ -294,4 +327,26 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {}
+
+    private void illegalChange(String message){
+        if(message == null) message = "Ulovlig ændring";
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private int getNumberOfHiddenCards(){
+        int total = 0;
+        for (int i = 0; i < cards.size(); i++)
+            if(cards.get(i).getValue() == 14)
+                total++;
+        return total;
+    }
+
+    private int getNumberOfShownCards(){
+        int total = 0;
+        for (int i = 0; i < cards.size(); i++)
+            if(cards.get(i).getValue() != 14)
+                total++;
+        return total;
+    }
+
 }

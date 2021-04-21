@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -37,9 +39,8 @@ import okhttp3.Response;
 //todo hvad er maks kort der kan være i piles?
 //todo er det ok ift. algoritmen der beregner næste træk? (getTopCardFromFinishSpace, getTopCardFromPile)
 
-//todo tiden og turen på spilskærmen skal måske bare væk?
-//todo ville være nice med en indikator på, at kortene nu kan ændres
 //todo evt. load animation mens billede uploades og analyseres på server
+//todo spillet skal være i et scroll view
 
 //Card(?,14) == card back
 //Card(1,0) == empty card
@@ -62,9 +63,10 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     Executor bgThread;
     Handler uiThread;
 
-    LayoutHolder layouts[] = new LayoutHolder[NUMBER_OF_LAYOUTS];
+    final LayoutHolder layouts[] = new LayoutHolder[NUMBER_OF_LAYOUTS];
     Card_Factory card_factory;
-    GameBoard gameBoard = GameBoard.getInstance();
+    final GameBoard gameBoard = GameBoard.getInstance();
+    Animation shake;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,8 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
         bgThread = Executors.newSingleThreadExecutor();
         uiThread = new Handler();
+
+        shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 
         //Calculate width of cards for current display
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -135,17 +139,31 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     @Override
     public void goEdit() {
         enableEdit = true;
+        startShake();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, new Frag_GameEdit())
                 .commit();
     }
 
+    private void startShake(){
+        for (int i = 0; i < layouts.length; i++) {
+            layouts[i].getLayout().startAnimation(shake);
+        }
+    }
+
     @Override
     public void goToControls() {
         enableEdit = false;
+        stopShake();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, new Frag_GameControls())
                 .commit();
+    }
+
+    private void stopShake(){
+        for (int i = 0; i < layouts.length; i++) {
+            layouts[i].getLayout().clearAnimation();
+        }
     }
 
     @Override
@@ -243,7 +261,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
             //If a pile was clicked
             if(onClickLayoutIndex <= 6){
                 ArrayList<Card> cardsToShow = getCardsFromPile(onClickLayoutIndex);
-                Popup_PileEditor pileEditor = new Popup_PileEditor(this, cardsToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_PILE_CODE);
+                Popup_PileEditor pileEditor = new Popup_PileEditor(this, cardsToShow, layouts[onClickLayoutIndex].getName(), onClickLayoutIndex, width, dimensionInDp, EDIT_PILE_CODE);
                 pileEditor.show(this.getSupportFragmentManager(), null);
 
                 //If a finish space was clicked
