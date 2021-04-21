@@ -50,7 +50,5 @@ public class Frag_GameEdit extends Fragment implements View.OnClickListener {
         if(v == save){
             callBack.goToControls();
         }
-
     }
-
 }
