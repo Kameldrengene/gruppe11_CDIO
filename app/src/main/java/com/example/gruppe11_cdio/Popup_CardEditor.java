@@ -33,7 +33,7 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
     private Spinner colorSpinner, valueSpinner;
     private RelativeLayout layout;
 
-    private String[] values = {"A","2","3","4","5","6","7","8","9","10","11","12","13", "X"};
+    private String[] valuesAll = {"A","2","3","4","5","6","7","8","9","10","11","12","13"};
     private String[] colors = {"Spar","Hjerter","Klør","Ruder"};
 
     private Card_Factory card_factory;
@@ -95,7 +95,7 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
 
     private void displayValueSpinner(){
         valueSpinner.setOnItemSelectedListener(this);
-        ArrayAdapter<String> valueAdapter = new ArrayAdapter<String>(listener, simple_spinner_item, values);
+        ArrayAdapter<String> valueAdapter = new ArrayAdapter<String>(listener, simple_spinner_item, valuesAll);
         valueAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         valueSpinner.setAdapter(valueAdapter);
         refreshValueSpinner();

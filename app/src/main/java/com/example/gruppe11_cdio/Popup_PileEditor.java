@@ -33,6 +33,7 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     private int CODE, cardWidth, cardHeight, pileIndex;
     private int currentCardIndex;
     private int MAX_SHOWN_CARDS = 13;
+    private int CLOSED_VALUE = 14;
     private String pileName;
 
     private TextView pileNumber, colorText, valueText, cardText, plus0ButtonText, plus1ButtonText, minus1ButtonText, plus2ButtonText, minus2ButtonText;
@@ -40,7 +41,10 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     private RelativeLayout layout;
     private Button plus0, plus1, minus1, plus2, minus2, save;
 
-    private String[] values = {"A","2","3","4","5","6","7","8","9","10","11","12","13","X"};
+    private String[] valuesAll = {"A","2","3","4","5","6","7","8","9","10","11","12","13","X"};
+    private String[] valuesNoClosed = {"A","2","3","4","5","6","7","8","9","10","11","12","13"};
+    private String[] valuesNoOpen = {"X"};
+    private String[] displayedValues;
     private String[] colors = {"Spar","Hjerter","Klør","Ruder"};
 
     private Card_Factory card_factory;
@@ -88,6 +92,10 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         valueText = view.findViewById(R.id.textView14);
         cardText = view.findViewById(R.id.textView15);
 
+        cardSpinner.setOnItemSelectedListener(this);
+        valueSpinner.setOnItemSelectedListener(this);
+        colorSpinner.setOnItemSelectedListener(this);
+
         plus0 = view.findViewById(R.id.button0);
         plus0ButtonText = view.findViewById(R.id.textView11);
         plus1 = view.findViewById(R.id.button4);
@@ -126,7 +134,6 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     }
 
     private void displayCardSpinner(){
-        cardSpinner.setOnItemSelectedListener(this);
         List<String> cardNumbers = new ArrayList<String>();
         for (int i = 0; i < cards.size(); i++) cardNumbers.add(i+1 + "");
         ArrayAdapter<String> cardAdapter = new ArrayAdapter<String>(listener, simple_spinner_item, cardNumbers);
@@ -148,8 +155,34 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     }
 
     private void displayValueSpinner(){
-        valueSpinner.setOnItemSelectedListener(this);
-        ArrayAdapter<String> valueAdapter = new ArrayAdapter<String>(listener, simple_spinner_item, values);
+        Card currentCard = cards.get(currentCardIndex);
+
+        /* The following logic is to make sure only valid changes are displayed to the user */
+
+        //Is the current card closed?
+        if(currentCard.getValue() == CLOSED_VALUE)
+
+            //Is there room for an open card instead?
+            if(getNumberOfOpenCards() < MAX_SHOWN_CARDS)
+
+                //Is this an appropriate place for an open card?
+                if(cards.get(currentCardIndex + 1) == null || cards.get(currentCardIndex + 1).getValue() != CLOSED_VALUE)
+                    displayedValues = valuesAll;
+
+                else displayedValues = valuesNoOpen;
+            else displayedValues = valuesNoOpen;
+
+        //Is there room for a closed card instead?
+        else if(getNumberOfClosedCards() < pileIndex)
+
+            //Is this an appropriate place for a closed card?
+            if(currentCardIndex == 0 || cards.get(currentCardIndex - 1).getValue() == CLOSED_VALUE)
+                displayedValues = valuesAll;
+
+            else displayedValues = valuesNoClosed;
+        else displayedValues = valuesNoClosed;
+
+        ArrayAdapter<String> valueAdapter = new ArrayAdapter<String>(listener, simple_spinner_item, displayedValues);
         valueAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         valueSpinner.setAdapter(valueAdapter);
         refreshValueSpinner();
@@ -163,12 +196,14 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         } else {
             valueSpinner.setVisibility(View.VISIBLE);
             valueText.setVisibility(View.VISIBLE);
-            valueSpinner.setSelection(cards.get(currentCardIndex).getValue()-1);
+
+            //The value of the current card doesn't match the index of valuesNoOpen
+            if(displayedValues == valuesNoOpen) valueSpinner.setSelection(0);
+            else valueSpinner.setSelection(cards.get(currentCardIndex).getValue()-1);
         }
     }
 
     private void displayColorSpinner(){
-        colorSpinner.setOnItemSelectedListener(this);
         ArrayAdapter<String> colorAdapter = new ArrayAdapter<String>(listener, simple_spinner_item, colors);
         colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         colorSpinner.setAdapter(colorAdapter);
@@ -176,8 +211,8 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     }
 
     private void refreshColorSpinner(){
-        //If the stack is empty or the "back card" is chosen, hide this option
-        if(cards.get(0).equals(new Card(1,0)) || cards.get(currentCardIndex).getValue() == 14){
+        //If the stack is empty or a closed card is chosen, hide this option
+        if(cards.get(0).equals(new Card(1,0)) || cards.get(currentCardIndex).getValue() == CLOSED_VALUE){
             colorSpinner.setVisibility(View.GONE);
             colorText.setVisibility(View.GONE);
         } else {
@@ -190,17 +225,32 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     private void refreshPile(){
         cardViews = new ArrayList<>();
 
-        for (int i = 0; i < cards.size(); i++) {
+        //Create cardViews
+        for (int i = 0; i < cards.size(); i++)
             cardViews.add(card_factory.createCard(cards.get(i)));
-        }
+
 
         layout.removeAllViews();
         for (int i = 0; i < cardViews.size() ; i++) {
-            RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(cardWidth/8, cardHeight);
-            if(i==0) rp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            else rp.addRule(RelativeLayout.ALIGN_TOP, cardViews.get(i-1).getId());
-            rp.setMargins(10,60,10,0);
-            layout.addView(cardViews.get(i),rp);
+
+            //Add card
+            RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(cardWidth/8, cardHeight);
+            if(i==0) params1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            else params1.addRule(RelativeLayout.ALIGN_TOP, cardViews.get(i-1).getId());
+            params1.setMargins(10,60,10,0);
+            layout.addView(cardViews.get(i),params1);
+
+            //Add numbering
+            TextView text = new TextView(getContext());
+            text.setText(String.valueOf(i+1));
+            text.measure(0,0);
+            text.setId(View.generateViewId());
+
+            RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(text.getMeasuredWidth(), text.getMeasuredHeight());
+            params2.addRule(RelativeLayout.ALIGN_LEFT, cardViews.get(i).getId());
+            params2.addRule(RelativeLayout.ALIGN_TOP, cardViews.get(i).getId());
+            params2.setMargins(10 + cardWidth/8,0,10,0);
+            layout.addView(text, params2);
         }
         refreshButtons();
     }
@@ -249,26 +299,26 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         if(v == plus1){
             Card CardToAdd = null;
 
-           //Is there room for more cards?
+            /* The following logic is to make sure only valid changes are displayed to the user */
+
+            //Is there room for more cards?
             if(cards.size() < pileIndex + MAX_SHOWN_CARDS){
 
-                //Does the new card *have* to be hidden?
-                if(cards.get(0).getValue() == 14)
+                //Does the new card *have* to be closed?
+                if(cards.get(0).getValue() == CLOSED_VALUE)
 
-                    //Is it legal to add another hidden card?
-                    if(getNumberOfHiddenCards() < pileIndex)
-                        CardToAdd = new Card(0,14);
+                    //Is it legal to add another closed card?
+                    if(getNumberOfClosedCards() < pileIndex)
+                        CardToAdd = new Card(0,CLOSED_VALUE);
                     else illegalChange("For mange skjulte kort");
 
-                //Is it legal to add another shown card?
-                else if(getNumberOfShownCards() < MAX_SHOWN_CARDS)
+                //Is it legal to add another open card?
+                else if(getNumberOfOpenCards() < MAX_SHOWN_CARDS)
                     CardToAdd = new Card(0,1);
 
-                //Is it legal to add another hidden card?
-                else if(getNumberOfHiddenCards() < pileIndex)
-                    CardToAdd = new Card(0,14);
-
-                else illegalChange("For mange viste kort");
+                //Is it legal to add another closed card?
+                else if(getNumberOfClosedCards() < pileIndex)
+                    CardToAdd = new Card(0,CLOSED_VALUE);
 
             } else illegalChange("For mange kort");
 
@@ -279,8 +329,11 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         }
 
         if(v == plus2) {
-            currentCardIndex = cards.size() - 1;
-            cards.add(new Card(0,1));
+            //Is there room for more open cards?
+            if(getNumberOfOpenCards() < MAX_SHOWN_CARDS){
+                cards.add(new Card(0,1));
+                currentCardIndex = cards.size() - 1;
+            } else illegalChange("For mange åbne kort");
         }
 
         if(v == minus1){
@@ -299,10 +352,12 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
                 cards.add(new Card(1,0));
         }
 
-        refreshPile();
-        refreshColorSpinner();
-        refreshValueSpinner();
-        displayCardSpinner();
+        if(v == plus0 || v == plus1 || v == plus2 || v == minus1 || v == minus2) {
+            refreshPile();
+            refreshColorSpinner();
+            displayValueSpinner();
+            displayCardSpinner();
+        }
     }
 
     @Override
@@ -311,10 +366,14 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
             currentCardIndex = position;
             valueSpinner.setSelection(cards.get(currentCardIndex).getValue()-1);
             colorSpinner.setSelection(cards.get(currentCardIndex).getType());
+            refreshColorSpinner();
+            displayValueSpinner();
         }
 
         if(parent.getId() == VALUE_SPINNER_ID){
-            cards.get(currentCardIndex).setValue(position+1);
+            //The value of the current card doesn't match the index of valuesNoOpen
+            if(displayedValues == valuesNoOpen) cards.get(currentCardIndex).setValue(CLOSED_VALUE);
+            else cards.get(currentCardIndex).setValue(position+1);
             refreshColorSpinner();
             refreshPile();
         }
@@ -333,20 +392,19 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private int getNumberOfHiddenCards(){
+    private int getNumberOfClosedCards(){
         int total = 0;
         for (int i = 0; i < cards.size(); i++)
-            if(cards.get(i).getValue() == 14)
+            if(cards.get(i).getValue() == CLOSED_VALUE)
                 total++;
         return total;
     }
 
-    private int getNumberOfShownCards(){
+    private int getNumberOfOpenCards(){
         int total = 0;
         for (int i = 0; i < cards.size(); i++)
-            if(cards.get(i).getValue() != 14)
+            if(cards.get(i).getValue() != CLOSED_VALUE)
                 total++;
         return total;
     }
-
 }

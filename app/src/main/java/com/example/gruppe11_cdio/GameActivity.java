@@ -16,13 +16,11 @@ import android.widget.Toast;
 import com.example.gruppe11_cdio.Factory.Card;
 import com.example.gruppe11_cdio.Factory.Card_Factory;
 import com.example.gruppe11_cdio.Objects.GameBoard;
-import com.example.gruppe11_cdio.Objects.Pile;
 
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Executor;
@@ -57,8 +55,8 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     boolean enableEdit = false;
     int onClickLayoutIndex;
 
-    int width;
-    int dimensionInDp;
+    int cardWidth;
+    int cardHeight;
 
     Executor bgThread;
     Handler uiThread;
@@ -81,10 +79,8 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
         //Calculate width of cards for current display
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        width = displayMetrics.widthPixels;
-
-        int cardHeightInDp = CARD_HEIGHT_IN_DP;
-        dimensionInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, cardHeightInDp, getResources().getDisplayMetrics());
+        cardWidth = displayMetrics.widthPixels;
+        cardHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, CARD_HEIGHT_IN_DP, getResources().getDisplayMetrics());
 
         card_factory = new Card_Factory(this);
 
@@ -139,7 +135,8 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     @Override
     public void goEdit() {
         enableEdit = true;
-        startShake();
+        //todo enable
+//        startShake();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, new Frag_GameEdit())
                 .commit();
@@ -225,7 +222,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
             cardViews.add(card_factory.createCard(arrayOfCards.get(i)));
 
         for (int i = 0; i < cardViews.size() ; i++) {
-            RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(width/8, dimensionInDp);
+            RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(cardWidth /8, cardHeight);
             if(i==0) rp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             else rp.addRule(RelativeLayout.ALIGN_TOP, cardViews.get(i-1).getId());
 
@@ -239,7 +236,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
         layout.getLayout().removeAllViews();
 
-        RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(width/8, dimensionInDp);
+        RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(cardWidth /8, cardHeight);
         rp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
         rp.setMargins(10,40,10,0);
@@ -248,7 +245,9 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
     @Override
     public void onClick(View v) {
-        if(enableEdit){
+
+        //todo change to enableEdit
+        if(true){
             //Find out what pile/layout was pressed
             onClickLayoutIndex = 0;
             for (int i = 0; i < layouts.length; i++) {
@@ -261,19 +260,19 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
             //If a pile was clicked
             if(onClickLayoutIndex <= 6){
                 ArrayList<Card> cardsToShow = getCardsFromPile(onClickLayoutIndex);
-                Popup_PileEditor pileEditor = new Popup_PileEditor(this, cardsToShow, layouts[onClickLayoutIndex].getName(), onClickLayoutIndex, width, dimensionInDp, EDIT_PILE_CODE);
+                Popup_PileEditor pileEditor = new Popup_PileEditor(this, cardsToShow, layouts[onClickLayoutIndex].getName(), onClickLayoutIndex, cardWidth, cardHeight, EDIT_PILE_CODE);
                 pileEditor.show(this.getSupportFragmentManager(), null);
 
-                //If a finish space was clicked
+            //If a finish space was clicked
             } else if(onClickLayoutIndex <= 10) {
                 Card cardToShow  = getTopCardFromFinishSpace(onClickLayoutIndex - NUMBER_OF_SPACES);
-                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_FINISH_CODE);
+                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), cardWidth, cardHeight, EDIT_FINISH_CODE);
                 cardEditor.show(this.getSupportFragmentManager(), null);
 
-                //If the deck was clicked
+            //If the deck was clicked
             } else if(onClickLayoutIndex == 11){
                 Card cardToShow = getTopCardFromDeck();
-                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), width, dimensionInDp, EDIT_DECK_CODE);
+                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), cardWidth, cardHeight, EDIT_DECK_CODE);
                 cardEditor.show(this.getSupportFragmentManager(), null);
             }
         }
