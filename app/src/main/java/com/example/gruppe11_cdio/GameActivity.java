@@ -35,7 +35,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 //todo evt. load animation mens billede uploades og analyseres på server
-//todo spillet skal være i et scroll view
 
 //Card(?,14) == card back
 //Card(1,0) == empty card
