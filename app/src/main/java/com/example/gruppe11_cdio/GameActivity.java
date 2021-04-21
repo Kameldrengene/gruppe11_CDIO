@@ -35,6 +35,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 //todo evt. load animation mens billede uploades og analyseres på server
+//todo når "analyser" bliver trykket, skal kabalen analyseres om det er lovlig, før vi går videre.
 
 //Card(?,14) == card back
 //Card(1,0) == empty card
@@ -131,8 +132,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     @Override
     public void goEdit() {
         enableEdit = true;
-        //todo enable
-//        startShake();
+        startShake();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, new Frag_GameEdit())
                 .commit();
@@ -242,8 +242,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     @Override
     public void onClick(View v) {
 
-        //todo change to enableEdit
-        if(true){
+        if(enableEdit){
             //Find out what pile/layout was pressed
             onClickLayoutIndex = 0;
             for (int i = 0; i < layouts.length; i++) {
