@@ -298,25 +298,21 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
         //If a finish space was edited
         if(CODE == EDIT_FINISH_CODE) {
             ArrayList<Card> cards = gameBoard.getFinSpaces().get(onClickLayoutIndex - NUMBER_OF_SPACES);
-            if(cards.size() > 0) cards.remove(0);
+            if(cards.size() == 0) cards.add(new Card(1,0));
             if(cardIsEmpty) cards.clear();
-            else cards.add(card);
+            else {
+                cards.get(0).setType(card.getType());
+                cards.get(0).setValue(card.getValue());
+            }
 
         //Else the deck was edited
         } else {
-            ArrayList<Card> cards = gameBoard.getDeck();
-            if(gameBoard.getDeckPointer() > -1) {
-                cards.remove(0);
-                gameBoard.setDeckPointer(gameBoard.getDeckPointer() - 1);
-            }
-            if(cardIsEmpty){
-                cards.clear();
-                gameBoard.setDeckPointer(-1);
-            }
-            else {
-                cards.add(card);
-                gameBoard.setDeckPointer(gameBoard.getDeckPointer() + 1);
-            }
+
+            //Notice this code just set deckPointer = 0 and updates that index
+            gameBoard.setDeckPointer(0);
+            Card cardToUpdate = gameBoard.getDeck().get(gameBoard.getDeckPointer());
+            cardToUpdate.setType(card.getType());
+            cardToUpdate.setValue(card.getValue());
         }
 
         displayBoard();

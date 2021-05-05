@@ -157,7 +157,7 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     private void displayValueSpinner(){
         Card currentCard = cards.get(currentCardIndex);
 
-        /* The following logic is to make sure only valid changes are displayed to the user */
+        /* The following logic is to make sure only valid changes are available to the user */
 
         //Is the current card closed?
         if(currentCard.getValue() == CLOSED_VALUE)
@@ -303,7 +303,7 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         if(v == plus1){
             Card CardToAdd = null;
 
-            /* The following logic is to make sure only valid changes are displayed to the user */
+            /* The following logic is to make sure only valid changes are available to the user */
 
             //Is there room for more cards?
             if(cards.size() < pileIndex + MAX_SHOWN_CARDS){
