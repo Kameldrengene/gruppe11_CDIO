@@ -37,6 +37,7 @@ import okhttp3.Response;
 //todo evt. load animation mens billede uploades og analyseres på server
 //todo når "analyser" bliver trykket, skal kabalen analyseres om det er lovlig, før vi går videre.
 
+//Card(type, value)
 //Card(?,14) == card back
 //Card(1,0) == empty card
 public class GameActivity extends Popup_EditorInterface implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls, View.OnClickListener {

@@ -238,14 +238,24 @@
                 app:layout_constraintTop_toTopOf="@+id/button7" />
 
             <Button
+                android:id="@+id/openclose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/primary"
+                android:text="Vend"
+                app:layout_constraintStart_toStartOf="@+id/textView14"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerPickValue" />
+
+            <Button
                 android:id="@+id/save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:backgroundTint="@color/secondarydark"
                 android:text="Gem"
-                app:layout_constraintStart_toStartOf="@+id/textView14"
-                app:layout_constraintTop_toBottomOf="@+id/spinnerPickValue" />
+                app:layout_constraintStart_toStartOf="@+id/openclose"
+                app:layout_constraintTop_toBottomOf="@+id/openclose" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

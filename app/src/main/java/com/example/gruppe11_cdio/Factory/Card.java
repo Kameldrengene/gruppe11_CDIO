@@ -51,4 +51,26 @@ public class Card {
         return card;
     }
 
+    public String getValueStr(){
+        if(value == 1) return "es";
+        if(value < 11) return String.valueOf(value);
+
+        switch(value){
+            case 11: return "knægt";
+            case 12: return "dronning";
+            case 13: return "konge";
+        }
+        return null;
+    }
+
+    public String getTypeStr(){
+        switch(type){
+            case 0: return "Spar";
+            case 1: return "Hjerter";
+            case 2: return "Klør";
+            case 3: return "Ruder";
+        }
+        return null;
+    }
+
 }
