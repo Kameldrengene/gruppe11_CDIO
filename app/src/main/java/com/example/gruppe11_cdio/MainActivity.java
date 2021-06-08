@@ -58,14 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
 
-        if(v==regler){
+        if(v==regler) alertDialog.show();
+        if(v== reglerOkButton) alertDialog.dismiss();
 
-        alertDialog.show();
-
-        }
-
-        if(v== reglerOkButton){
-            alertDialog.dismiss();
-        }
     }
 }

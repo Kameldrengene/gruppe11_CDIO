@@ -2,6 +2,8 @@ package com.example.gruppe11_cdio;
 
 import java.text.SimpleDateFormat;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -12,6 +14,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.example.gruppe11_cdio.Factory.Card;
 import com.example.gruppe11_cdio.Factory.Card_Factory;
@@ -34,6 +38,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.example.gruppe11_cdio.LoadScreen.load;
+import static java.lang.Thread.sleep;
+
 //todo evt. load animation mens billede uploades og analyseres på server
 //todo når "analyser" bliver trykket, skal kabalen analyseres om det er lovlig, før vi går videre.
 
@@ -49,6 +56,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     final int EDIT_PILE_CODE = 0;
     final int EDIT_FINISH_CODE = 1;
     final int EDIT_DECK_CODE = 2;
+    final int USER_IMAGE_CODE = 0;
 
     boolean enableEdit = false;
     int onClickLayoutIndex;
@@ -117,10 +125,22 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
         for (int i = 0; i < NUMBER_OF_LAYOUTS; i++)
             layouts[i].getLayout().setOnClickListener(this);
 
-        displayBoard();
-
         //Load buttons
         goToControls();
+
+        //Take first picture
+        Intent i = new Intent(this, TakePhoto.class);
+        startActivityForResult(i, USER_IMAGE_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == USER_IMAGE_CODE && resultCode == Activity.RESULT_OK){
+            String path = data.getStringExtra("result");
+            updateImage(path);
+        }
     }
 
     @Override
@@ -162,6 +182,9 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
     @Override
     public void updateImage(String path) {
+
+        startActivity(new Intent(this, LoadScreen.class));
+
         File finalFile = new File(path);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.GERMANY);
         Date now = new Date();
@@ -182,16 +205,37 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
                 .build();
         bgThread.execute(()->{
             try {
+                sleep(2000);
                 Response response = client.newCall(request).execute();
                 String responseMsg = response.body().string();
 
+                //If success
                 uiThread.post(()->{
+                    load.finish();
                     Toast.makeText(this,responseMsg,Toast.LENGTH_LONG).show();
+
+                    //Update gameboard internally
+                    //todo ...
+
+                    gameBoard.setUpGame();
+                    displayBoard();
                 });
 
             } catch (IOException e) {
                 e.printStackTrace();
+
+                //If error send user to start page and display message
+                uiThread.post(() -> {
+                    Intent i = new Intent(this, MainActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    Toast.makeText(this, "Fejl ved kontakt af server", Toast.LENGTH_LONG).show();
+
+                });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
         });
     }
 

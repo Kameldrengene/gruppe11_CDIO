@@ -401,9 +401,9 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
     }
     
     Card nextNewCard() {
-        //Loop through all possible cards
-        for (int i = 0; i < colors.length; i++) {
-            for (int j = 1; j <= values.length; j++) {
+        //Loop through all possible cards from high to low
+        for (int i = colors.length - 1; i > -1; i--) {
+            for (int j = values.length; j > 0; j--) {
 
                 //Add the first not already present
                 boolean present = false;

@@ -20,7 +20,7 @@ public class GameBoard {
         setUpGame();
     }
 
-    private void setUpGame(){
+    public void setUpGame(){
         finSpaces = new HashMap<>();
         deck = new ArrayList<>();
         deckPointer = -1;

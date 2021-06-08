@@ -57,8 +57,10 @@ public class TakePhoto extends AppCompatActivity {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 takeUserPhoto();
             else {
+                Intent i = new Intent(this, MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
                 Toast.makeText(this, "Mangler kameratilladelse", Toast.LENGTH_SHORT).show();
-                finish();
             }
         }
     }
@@ -67,7 +69,7 @@ public class TakePhoto extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
-            Toast.makeText(this, "Image saved", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Image saved", Toast.LENGTH_SHORT).show();
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", currentPhotoPath);
             setResult(Activity.RESULT_OK, returnIntent);
