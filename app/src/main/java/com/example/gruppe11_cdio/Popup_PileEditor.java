@@ -308,9 +308,23 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         }
 
         if(v == flip){
+            //If a card has previously been turned, remember its value
             Card card = cards.get(currentCardIndex);
-            if(card.getValue() == CLOSED_VALUE) card.setValue(1);
-            else card.setValue(CLOSED_VALUE);
+            if(card.getValue() == CLOSED_VALUE){
+                if(card.getLastValue() != -1 &&
+                        !isCardAlreadyPresent(new Card(card.getType(), card.getLastValue()))){
+                    card.setValue(card.getLastValue());
+                } else {
+                    Card nextCard = nextNewCard();
+                    card.setValue(nextCard.getValue());
+                    card.setType(nextCard.getType());
+                }
+                card.setLastValue(-1);
+            }
+            else {
+                card.setLastValue(card.getValue());
+                card.setValue(CLOSED_VALUE);
+            }
         }
 
         if(v != save) {
@@ -371,6 +385,10 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
             }
         }
 
+        //Does the pile end with a closed card?
+        if(cards.get(cards.size() -1).getValue() == 14)
+            return errorToast("Må ikke ende med lukket kort");
+
         //Are the cards in decreasing order and switching in color?
         for (int i = closedCards; i < cards.size() - 1; i++) {
             Card currentCard = cards.get(i);
@@ -399,8 +417,16 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         return false;
     }
+
+    private boolean isCardAlreadyPresent(Card card) {
+        for (int i = 0; i < cards.size(); i++) {
+            if(card.equals(cards.get(i)))
+                return true;
+        }
+        return false;
+    }
     
-    Card nextNewCard() {
+    private Card nextNewCard() {
         //Loop through all possible cards from high to low
         for (int i = colors.length - 1; i > -1; i--) {
             for (int j = values.length; j > 0; j--) {
@@ -417,15 +443,15 @@ public class Popup_PileEditor extends AppCompatDialogFragment implements Adapter
         return null;
     }
 
-    boolean isCardClosed() {
+    private boolean isCardClosed() {
         return cards.get(currentCardIndex).getValue() == CLOSED_VALUE;
     }
 
-    boolean isCardEmpty() {
+    private boolean isCardEmpty() {
         return cards.get(currentCardIndex).getValue() == EMPTY_VALUE;
     }
 
-    boolean isStackEmpty() {
+    private boolean isStackEmpty() {
         return cards.get(0).getValue() == EMPTY_VALUE && cards.size() == 1;
     }
 

@@ -74,8 +74,8 @@ public class TakePhoto extends AppCompatActivity {
             returnIntent.putExtra("result", currentPhotoPath);
             setResult(Activity.RESULT_OK, returnIntent);
             inProgress = false;
-            finish();
         }
+        finish();
     }
 
     private void dispatchTakePictureIntent() {
@@ -94,7 +94,6 @@ public class TakePhoto extends AppCompatActivity {
                photoURI = FileProvider.getUriForFile(TakePhoto.this, TakePhoto.this.getApplicationContext().getPackageName() + ".provider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, CAMERA_CODE);
-
             }
         }
     }

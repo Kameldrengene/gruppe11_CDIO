@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
 
     Button takeImage, back;
     Controls callBack;
+    TextView message;
     int USER_IMAGE_CODE = 0;
 
     //Interface so this fragment can talk to parent activity
@@ -32,7 +34,7 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
             //We need to be able to call parent to change view when a button is pressed
             callBack = (Controls) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement topbar");
+            throw new ClassCastException(activity.toString() + " must implement Controls");
         }
     }
 
@@ -47,6 +49,9 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
         back = view.findViewById(R.id.button3);
         back.setOnClickListener(this);
 
+        message = view.findViewById(R.id.textView6);
+        message.setText(GameActivity.nextMove);
+
         return view;
     }
 
@@ -56,6 +61,7 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
             Intent i = new Intent(getContext(), TakePhoto.class);
             startActivityForResult(i, USER_IMAGE_CODE);
         }
+
         if(v == back)
             callBack.goToControls();
     }
@@ -69,6 +75,5 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
             callBack.updateImage(path);
             callBack.goToControls();
         }
-
     }
 }

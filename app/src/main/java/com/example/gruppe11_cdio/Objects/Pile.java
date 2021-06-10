@@ -116,11 +116,10 @@ public class Pile {
         clearCards();
 
         for (int i = 0; i < cards.size(); i++) {
-            if(cards.get(i).equals(new Card(1,0)))
+            if(cards.get(i).getValue() == 14)
                 hiddenCards.add(cards.get(i));
             else shownCards.add(cards.get(i));
         }
-
     }
 
     public void clearCards(){

@@ -7,25 +7,31 @@ import java.util.Random;
 import com.example.gruppe11_cdio.Factory.Card;
 
 public class GameBoard {
-    private HashMap<Integer, ArrayList<Card>> finSpaces; //key is type: 0: spar; 1: Hjerter; 2: Klør; 3: Ruder;
-    private ArrayList<Card> deck;
-    private int deckPointer; // 0 is the top card
-    private HashMap<Integer, Pile> spaces;
+    private HashMap<Integer, ArrayList<Card>> finSpaces  = new HashMap<>(); //key is type: 0: spar; 1: Hjerter; 2: Klør; 3: Ruder;
+    private ArrayList<Card> deck = new ArrayList<>();;
+    private int deckPointer = -1; // 0 is the top card
+    private HashMap<Integer, Pile> spaces = new HashMap<>();
 
-    private static GameBoard instance = new GameBoard();
-    public static GameBoard getInstance(){ return instance; }
+    public GameBoard() {
+        setupEmptyGame();
+    }
 
-    //Singleton
-    private GameBoard() {
-        setUpGame();
+    private void setupEmptyGame() {
+        for (int i = 0; i < 4; i++){
+            finSpaces.put(i, new ArrayList<>());
+            finSpaces.get(i).add(new Card(1,0));
+        }
+
+        deck.add(new Card(1,0));
+
+        for (int i = 0; i < 7; i++) {
+            ArrayList<Card> hidden = new ArrayList<>();
+            ArrayList<Card> shown = new ArrayList<>();
+            spaces.put(i, new Pile(shown, hidden));
+        }
     }
 
     public void setUpGame(){
-        finSpaces = new HashMap<>();
-        deck = new ArrayList<>();
-        deckPointer = -1;
-        spaces = new HashMap<>();
-
         for (int i = 0; i < 4; i++){
             finSpaces.put(i, new ArrayList<>());
         }
@@ -46,7 +52,6 @@ public class GameBoard {
                     shown.add(deck.get(0));
                 } else {
                     hidden.add(deck.get(0));
-
                 }
                 deck.remove(0);
             }

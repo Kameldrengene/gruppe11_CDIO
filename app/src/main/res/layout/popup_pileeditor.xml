@@ -40,6 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Kort:"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@+id/spinnerPickCardNumber"
                 app:layout_constraintStart_toStartOf="@+id/pileNumber"
                 app:layout_constraintTop_toTopOf="@+id/spinnerPickCardNumber" />
@@ -49,6 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Kulør:"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@+id/spinnerPickColor"
                 app:layout_constraintStart_toStartOf="@+id/textView15"
                 app:layout_constraintTop_toTopOf="@+id/spinnerPickColor" />
@@ -58,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Værdi:"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@+id/spinnerPickValue"
                 app:layout_constraintStart_toStartOf="@+id/textView15"
                 app:layout_constraintTop_toTopOf="@+id/spinnerPickValue" />

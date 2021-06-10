@@ -20,7 +20,9 @@ import androidx.annotation.Nullable;
 import com.example.gruppe11_cdio.Factory.Card;
 import com.example.gruppe11_cdio.Factory.Card_Factory;
 import com.example.gruppe11_cdio.Objects.GameBoard;
+import com.example.gruppe11_cdio.Objects.MoveDTO;
 import com.example.gruppe11_cdio.Objects.Pile;
+import com.google.gson.Gson;
 
 
 import java.io.File;
@@ -38,11 +40,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.example.gruppe11_cdio.LoadScreen.load;
 import static java.lang.Thread.sleep;
-
-//todo evt. load animation mens billede uploades og analyseres på server
-//todo når "analyser" bliver trykket, skal kabalen analyseres om det er lovlig, før vi går videre.
 
 //Card(type, value)
 //Card(?,14) == card back
@@ -58,6 +56,8 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     final int EDIT_DECK_CODE = 2;
     final int USER_IMAGE_CODE = 0;
 
+    public static String nextMove = "";
+
     boolean enableEdit = false;
     int onClickLayoutIndex;
 
@@ -66,10 +66,11 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
     Executor bgThread;
     Handler uiThread;
+    LoadingDialog loadingDialog;
 
     final LayoutHolder layouts[] = new LayoutHolder[NUMBER_OF_LAYOUTS];
     Card_Factory card_factory;
-    final GameBoard gameBoard = GameBoard.getInstance();
+    GameBoard gameBoard = new GameBoard();
     Animation shake;
 
     @Override
@@ -79,6 +80,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
         bgThread = Executors.newSingleThreadExecutor();
         uiThread = new Handler();
+        loadingDialog = new LoadingDialog(this);
 
         shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 
@@ -128,6 +130,8 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
         //Load buttons
         goToControls();
 
+        displayBoard();
+
         //Take first picture
         Intent i = new Intent(this, TakePhoto.class);
         startActivityForResult(i, USER_IMAGE_CODE);
@@ -144,10 +148,117 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
     }
 
     @Override
+    public void updateImage(String path) {
+
+        loadingDialog.startLoadingDialog("Analyserer billede...");
+
+        File finalFile = new File(path);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.GERMANY);
+        Date now = new Date();
+        String fileName = formatter.format(now) + ".jpg";
+
+        // Sender billede til vores backend i Flask
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("file",fileName,
+                        RequestBody.create(MediaType.parse("application/octet-stream"),
+                                finalFile))
+                .build();
+        Request request = new Request.Builder()
+                .url("http://cdio.isik.dk:5000")
+                .method("POST", body)
+                .build();
+        bgThread.execute(()->{
+            try {
+                sleep(2000);
+                Response response = client.newCall(request).execute();
+                String responseMsg = response.body().string();
+
+                //If success
+                uiThread.post(()->{
+
+                    //Update gameboard internally
+                    gameBoard = new Gson().fromJson(responseMsg, GameBoard.class);
+
+                    displayBoard();
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+
+                uiThread.post(() -> {
+                    Toast.makeText(this, "Fejl ved kontakt af server", Toast.LENGTH_LONG).show();
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                uiThread.post(() -> {
+                    Toast.makeText(this, "Der skete en fejl", Toast.LENGTH_LONG).show();
+                });
+            }
+            loadingDialog.dismissDialog();
+        });
+    }
+
+    @Override
     public void goAnalyze() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.framelayout, new Frag_GameAnalyze())
-                .commit();
+
+        loadingDialog.startLoadingDialog("Analyserer spil...");
+        Gson g = new Gson();
+
+        // Sender GameBoard til vores backend i Flask
+        OkHttpClient client = new OkHttpClient()
+                .newBuilder()
+                .build();
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, g.toJson(gameBoard));
+
+        Request request = new Request.Builder()
+                .url("http://cdio.isik.dk:5000/turn/")
+                .method("POST", body)
+                .build();
+
+        bgThread.execute(()->{
+            try {
+                sleep(2000);
+                Response response = client.newCall(request).execute();
+                MoveDTO responseMsg = g.fromJson(response.body().string(), MoveDTO.class);
+
+                //If success
+                uiThread.post(()->{
+
+                    //Display message
+                    if(responseMsg.isCorrect()){
+                        nextMove = responseMsg.getMsg();
+
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.framelayout, new Frag_GameAnalyze())
+                                .commitAllowingStateLoss();
+                    } else
+                        Toast.makeText(this, responseMsg.getMsg(), Toast.LENGTH_LONG).show();
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+
+                //If IO error send user to start page and display message
+                uiThread.post(() -> {
+                    Toast.makeText(this, "Fejl ved kontakt af server", Toast.LENGTH_LONG).show();
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                //If general error send user to start page and display message
+                uiThread.post(() -> {
+                    Toast.makeText(this, "Der skete en fejl", Toast.LENGTH_LONG).show();
+                });
+            }
+            loadingDialog.dismissDialog();
+        });
     }
 
     @Override
@@ -178,65 +289,6 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
         for (int i = 0; i < layouts.length; i++) {
             layouts[i].getLayout().clearAnimation();
         }
-    }
-
-    @Override
-    public void updateImage(String path) {
-
-        startActivity(new Intent(this, LoadScreen.class));
-
-        File finalFile = new File(path);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.GERMANY);
-        Date now = new Date();
-        String fileName = formatter.format(now) + ".jpg";
-
-        // Sender billede til vores backend i nodejs
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
-        MediaType mediaType = MediaType.parse("text/plain");
-        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("file",fileName,
-                        RequestBody.create(MediaType.parse("application/octet-stream"),
-                                finalFile))
-                .build();
-        Request request = new Request.Builder()
-                .url("http://cdio.isik.dk:5000")
-                .method("POST", body)
-                .build();
-        bgThread.execute(()->{
-            try {
-                sleep(2000);
-                Response response = client.newCall(request).execute();
-                String responseMsg = response.body().string();
-
-                //If success
-                uiThread.post(()->{
-                    load.finish();
-                    Toast.makeText(this,responseMsg,Toast.LENGTH_LONG).show();
-
-                    //Update gameboard internally
-                    //todo ...
-
-                    gameBoard.setUpGame();
-                    displayBoard();
-                });
-
-            } catch (IOException e) {
-                e.printStackTrace();
-
-                //If error send user to start page and display message
-                uiThread.post(() -> {
-                    Intent i = new Intent(this, MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    Toast.makeText(this, "Fejl ved kontakt af server", Toast.LENGTH_LONG).show();
-
-                });
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        });
     }
 
     private void displayBoard(){

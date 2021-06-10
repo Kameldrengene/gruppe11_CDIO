@@ -57,7 +57,9 @@ public class Frag_GameControls extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
-        if(v == analyze) callBack.goAnalyze();
+        if(v == analyze) {
+            callBack.goAnalyze();
+        }
 
         if(v == camera){
             Intent i = new Intent(getContext(), TakePhoto.class);
