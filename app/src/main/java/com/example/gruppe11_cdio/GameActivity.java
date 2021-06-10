@@ -59,6 +59,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
     public static String nextMove = "";
 
     boolean enableEdit = false;
+    boolean firstPicture;
     int onClickLayoutIndex;
 
     int cardWidth;
@@ -133,6 +134,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         displayBoard();
 
         //Take first picture
+        firstPicture = true;
         Intent i = new Intent(this, TakePhoto.class);
         startActivityForResult(i, USER_IMAGE_CODE);
     }
@@ -144,9 +146,10 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         if(requestCode == USER_IMAGE_CODE && resultCode == Activity.RESULT_OK){
             String path = data.getStringExtra("result");
             updateImage(path);
-        } else {
+        } else if(firstPicture) {
             finish();
         }
+        firstPicture = false;
     }
 
     @Override
