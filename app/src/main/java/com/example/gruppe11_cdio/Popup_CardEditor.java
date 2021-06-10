@@ -23,7 +23,7 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
 
     private int VALUE_SPINNER_ID, COLOR_SPINNER_ID;
 
-    private Popup_EditorInterface listener;
+    private Popup_Interface listener;
     private Card card;
     private int CODE, cardWidth, cardHeight;
     private String pileName;
@@ -39,7 +39,7 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
     private Card_Factory card_factory;
     private ImageView cardView;
 
-    public Popup_CardEditor(Popup_EditorInterface listener, Card card, String pileName, int cardWidth, int cardHeight, int CODE) {
+    public Popup_CardEditor(Popup_Interface listener, Card card, String pileName, int cardWidth, int cardHeight, int CODE) {
         this.listener = listener;
 
         //Best practice with deep copy if user decides not to save

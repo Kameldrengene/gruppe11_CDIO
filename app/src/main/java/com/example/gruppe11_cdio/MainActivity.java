@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(v==spil){
             Intent intent = new Intent(this,GameActivity.class);
             startActivity(intent);
+            Toast.makeText(this, "Tag et billede af kabalen", Toast.LENGTH_LONG).show();
         }
 
         if(v==regler) alertDialog.show();

@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-public class LoadingDialog {
+public class Dialog_Loading {
 
     private Activity activity;
     private AlertDialog dialog;
     private TextView loading;
 
-    public LoadingDialog(Activity activity) {
+    public Dialog_Loading(Activity activity) {
         this.activity = activity;
     }
 

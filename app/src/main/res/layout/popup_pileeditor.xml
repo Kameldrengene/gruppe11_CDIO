@@ -247,6 +247,8 @@
                 android:layout_marginTop="5dp"
                 android:backgroundTint="@color/primary"
                 android:text="Vend"
+                android:textAllCaps="false"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/textView14"
                 app:layout_constraintTop_toBottomOf="@+id/spinnerPickValue" />
 
@@ -254,9 +256,11 @@
                 android:id="@+id/save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="3dp"
                 android:backgroundTint="@color/secondarydark"
                 android:text="Gem"
+                android:textAllCaps="false"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/openclose"
                 app:layout_constraintTop_toBottomOf="@+id/openclose" />
 

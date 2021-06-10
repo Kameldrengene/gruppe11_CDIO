@@ -45,7 +45,7 @@ import static java.lang.Thread.sleep;
 //Card(type, value)
 //Card(?,14) == card back
 //Card(1,0) == empty card
-public class GameActivity extends Popup_EditorInterface implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls, View.OnClickListener {
+public class GameActivity extends Popup_Interface implements Frag_GameControls.Controls, Frag_GameEdit.Controls, Frag_GameAnalyze.Controls, View.OnClickListener {
 
     final int NUMBER_OF_SPACES = 7;
     final int NUMBER_OF_FINISH_PLACES = 4;
@@ -66,7 +66,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
     Executor bgThread;
     Handler uiThread;
-    LoadingDialog loadingDialog;
+    Dialog_Loading loadingDialog;
 
     final LayoutHolder layouts[] = new LayoutHolder[NUMBER_OF_LAYOUTS];
     Card_Factory card_factory;
@@ -80,7 +80,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
         bgThread = Executors.newSingleThreadExecutor();
         uiThread = new Handler();
-        loadingDialog = new LoadingDialog(this);
+        loadingDialog = new Dialog_Loading(this);
 
         shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 
@@ -144,13 +144,15 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
         if(requestCode == USER_IMAGE_CODE && resultCode == Activity.RESULT_OK){
             String path = data.getStringExtra("result");
             updateImage(path);
+        } else {
+            finish();
         }
     }
 
     @Override
     public void updateImage(String path) {
 
-        loadingDialog.startLoadingDialog("Analyserer billede...");
+        loadingDialog.startLoadingDialog("Afkoder billede...");
 
         File finalFile = new File(path);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.GERMANY);
@@ -195,7 +197,7 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
                 e.printStackTrace();
 
                 uiThread.post(() -> {
-                    Toast.makeText(this, "Der skete en fejl", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Fejl ved afkodning af billede", Toast.LENGTH_SHORT).show();
                 });
             }
             loadingDialog.dismissDialog();
@@ -243,18 +245,14 @@ public class GameActivity extends Popup_EditorInterface implements Frag_GameCont
 
             } catch (IOException e) {
                 e.printStackTrace();
-
-                //If IO error send user to start page and display message
                 uiThread.post(() -> {
                     Toast.makeText(this, "Fejl ved kontakt af server", Toast.LENGTH_LONG).show();
                 });
 
             } catch (Exception e) {
                 e.printStackTrace();
-
-                //If general error send user to start page and display message
                 uiThread.post(() -> {
-                    Toast.makeText(this, "Der skete en fejl", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Fejl ved analyse af billede", Toast.LENGTH_LONG).show();
                 });
             }
             loadingDialog.dismissDialog();

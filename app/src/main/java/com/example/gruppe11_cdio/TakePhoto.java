@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -38,9 +40,7 @@ public class TakePhoto extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
+    protected void onStart() { super.onStart(); }
 
     private void takeUserPhoto(){
         //Check permissions. If fine go ahead and take photo, otherwise ask for permission

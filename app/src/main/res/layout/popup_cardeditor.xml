@@ -145,6 +145,8 @@
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/secondarydark"
         android:text="Gem"
+        android:textAllCaps="false"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView14"
         app:layout_constraintTop_toBottomOf="@+id/spinnerPickValue" />
 
