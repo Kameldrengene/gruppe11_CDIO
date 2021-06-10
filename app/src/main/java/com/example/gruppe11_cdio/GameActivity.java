@@ -299,9 +299,14 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         for (int i = 0; i < NUMBER_OF_FINISH_PLACES; i++)
             displayPile(getTopCardFromFinishSpace(i), layouts[NUMBER_OF_SPACES + i]);
 
-        //And then the deck and open card
+        //Then the open card
         displayPile(getTopCardFromDeck(), layouts[NUMBER_OF_SPACES + NUMBER_OF_FINISH_PLACES]);
-        displayPile(new Card(0,0), layouts[NUMBER_OF_SPACES + NUMBER_OF_FINISH_PLACES + 1]);
+
+        //And then the deck
+        if(gameBoard.getDeckPointer() > 0) //If there are two cards
+            displayPile(new Card(0,14), layouts[NUMBER_OF_SPACES + NUMBER_OF_FINISH_PLACES + 1]); //Closed card
+        else
+            displayPile(new Card(1,0), layouts[NUMBER_OF_SPACES + NUMBER_OF_FINISH_PLACES + 1]); //Empty card
     }
 
     private void displayPile(ArrayList<Card> arrayOfCards, LayoutHolder layout){
@@ -364,6 +369,26 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                 Card cardToShow = getTopCardFromDeck();
                 Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), cardWidth, cardHeight, EDIT_DECK_CODE);
                 cardEditor.show(this.getSupportFragmentManager(), null);
+            } else if(onClickLayoutIndex == 12){
+
+                System.out.println("DECK BEFORE : " + gameBoard.getDeckPointer());
+
+                //Flip the card if appropriate
+                if(gameBoard.getDeckPointer() > 0){
+                    //If the card is closed
+                    gameBoard.setDeckPointer(0);
+                }
+                else { //Else the card is empty
+                    if(gameBoard.getDeckPointer() == 0)
+                        gameBoard.setDeckPointer(1);
+                    else {
+                        gameBoard.setDeckPointer(0);
+                        if(gameBoard.getDeck().size() == 0) gameBoard.getDeck().add(new Card(1,1));
+                        else gameBoard.getDeck().set(0, new Card(1,1));
+                    }
+                }
+                System.out.println("DECK AFTER : " + gameBoard.getDeckPointer());
+                displayBoard();
             }
         }
     }
@@ -378,7 +403,6 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
             if(arrayOfCards.get(0).equals(new Card(1,0))) pile.clearCards();
             else pile.setCardsInSequence(arrayOfCards);
         }
-
         displayBoard();
     }
 
@@ -403,20 +427,34 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         //Else the deck was edited
         } else {
 
-            //Notice this code just set deckPointer = 0 and updates that index
-            gameBoard.setDeckPointer(0);
-            Card cardToUpdate = gameBoard.getDeck().get(gameBoard.getDeckPointer());
-            cardToUpdate.setType(card.getType());
-            cardToUpdate.setValue(card.getValue());
+            int deckPointer = gameBoard.getDeckPointer();
+            System.out.println("DECK BEFORE : " + gameBoard.getDeckPointer());
+
+            //If the new card is empty
+            if(card.isEmpty()) {
+                if(gameBoard.getDeckPointer() > -1)
+                    gameBoard.getDeck().set(0, card);
+                gameBoard.setDeckPointer(-1);
+            }
+            else{
+                if(deckPointer > -1) //If there was a card previously
+                    gameBoard.getDeck().set(0, card);
+                else {
+                    gameBoard.setDeckPointer(0);
+                    if(gameBoard.getDeck().size() == 0) gameBoard.getDeck().add(card);
+                    else gameBoard.getDeck().set(0, card);
+                }
+            }
         }
 
+        System.out.println("DECK AFTER : " + gameBoard.getDeckPointer());
         displayBoard();
     }
 
     //Protects against null. Returns deep copy
     private Card getTopCardFromDeck(){
         if(gameBoard.getDeckPointer() == -1) return new Card(1,0);
-        else return gameBoard.getDeck().get(gameBoard.getDeckPointer()).deepCopy();
+        else return gameBoard.getDeck().get(0).deepCopy();
     }
 
     //Protects against null. Returns deep copy

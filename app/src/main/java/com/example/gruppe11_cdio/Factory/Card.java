@@ -54,6 +54,10 @@ public class Card {
         else return false;
     }
 
+    public boolean isEmpty() {
+        return(type == 1 && value == 0);
+    }
+
     public Card deepCopy() {
         Card card = new Card(this.type, this.value);
         return card;
