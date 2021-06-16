@@ -54,9 +54,9 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
     final int EDIT_PILE_CODE = 0;
     final int EDIT_FINISH_CODE = 1;
     final int EDIT_DECK_CODE = 2;
-    final int USER_IMAGE_CODE = 0;
 
     public static String nextMove = "";
+    public static boolean fromMain = false;
 
     boolean enableEdit = false;
     boolean firstPicture;
@@ -132,24 +132,16 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         goToControls();
 
         displayBoard();
-
-        //Take first picture
-        firstPicture = true;
-        Intent i = new Intent(this, TakePhoto.class);
-        startActivityForResult(i, USER_IMAGE_CODE);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == USER_IMAGE_CODE && resultCode == Activity.RESULT_OK){
-            String path = data.getStringExtra("result");
-            updateImage(path);
-        } else if(firstPicture) {
-            finish();
+    protected void onStart() {
+        super.onStart();
+        if(fromMain) {
+            String path = getIntent().getExtras().getString("photo");
+            if(path != null) updateImage(path);
+            fromMain = false;
         }
-        firstPicture = false;
     }
 
     @Override
@@ -186,7 +178,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
 
                     //Update gameboard internally
                     gameBoard = new Gson().fromJson(responseMsg, GameBoard.class);
-
+                    loadingDialog.dismissDialog();
                     displayBoard();
                 });
             } catch (IOException e) {
@@ -194,6 +186,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
 
                 uiThread.post(() -> {
                     Toast.makeText(this, "Fejl ved kontakt af server", Toast.LENGTH_LONG).show();
+                    loadingDialog.dismissDialog();
                 });
 
             } catch (Exception e) {
@@ -201,9 +194,9 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
 
                 uiThread.post(() -> {
                     Toast.makeText(this, "Fejl ved afkodning af billede", Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismissDialog();
                 });
             }
-            loadingDialog.dismissDialog();
         });
     }
 
@@ -244,21 +237,23 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                                 .commitAllowingStateLoss();
                     } else
                         Toast.makeText(this, responseMsg.getMsg(), Toast.LENGTH_LONG).show();
+                    loadingDialog.dismissDialog();
                 });
 
             } catch (IOException e) {
                 e.printStackTrace();
                 uiThread.post(() -> {
                     Toast.makeText(this, "Fejl ved kontakt af server", Toast.LENGTH_LONG).show();
+                    loadingDialog.dismissDialog();
                 });
 
             } catch (Exception e) {
                 e.printStackTrace();
                 uiThread.post(() -> {
                     Toast.makeText(this, "Fejl ved analyse af billede", Toast.LENGTH_LONG).show();
+                    loadingDialog.dismissDialog();
                 });
             }
-            loadingDialog.dismissDialog();
         });
     }
 
@@ -286,7 +281,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                 .commit();
     }
 
-    private void stopShake(){
+    private void stopShake() {
         for (int i = 0; i < layouts.length; i++) {
             layouts[i].getLayout().clearAnimation();
         }
@@ -374,8 +369,6 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                 cardEditor.show(this.getSupportFragmentManager(), null);
             } else if(onClickLayoutIndex == 12){
 
-                System.out.println("DECK BEFORE : " + gameBoard.getDeckPointer());
-
                 //Flip the card if appropriate
                 if(gameBoard.getDeckPointer() > 0){
                     //If the card is closed
@@ -390,7 +383,6 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                         else gameBoard.getDeck().set(0, new Card(1,1));
                     }
                 }
-                System.out.println("DECK AFTER : " + gameBoard.getDeckPointer());
                 displayBoard();
             }
         }

@@ -5,37 +5,55 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
+import androidx.camera.view.CameraView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 //Used with "startActivityForResult()"
-public class TakePhoto extends AppCompatActivity {
-    private String pictureImagePath = "";
+public class TakePhoto extends AppCompatActivity implements View.OnClickListener, ImageCapture.OnImageSavedCallback {
     String currentPhotoPath = "";
-    Uri photoURI;
     int CAMERA_REQUEST_CODE = 0;
-    int CAMERA_CODE = 1;
     static boolean inProgress = false;
+    ImageView capture;
+    private Executor executor = Executors.newSingleThreadExecutor();
+    CameraView mCameraView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.take_photo);
+        mCameraView = findViewById(R.id.cameraview);
+        capture = findViewById(R.id.capture);
+        capture.setOnClickListener(this);
         takeUserPhoto();
     }
 
@@ -47,7 +65,7 @@ public class TakePhoto extends AppCompatActivity {
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
         } else {
-            dispatchTakePictureIntent();
+            mCameraView.bindToLifecycle(TakePhoto.this);
         }
     }
 
@@ -61,39 +79,6 @@ public class TakePhoto extends AppCompatActivity {
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 Toast.makeText(this, "Mangler kameratilladelse", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
-            //Toast.makeText(this, "Image saved", Toast.LENGTH_SHORT).show();
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("result", currentPhotoPath);
-            setResult(Activity.RESULT_OK, returnIntent);
-            inProgress = false;
-        }
-        finish();
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-               photoURI = FileProvider.getUriForFile(TakePhoto.this, TakePhoto.this.getApplicationContext().getPackageName() + ".provider", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, CAMERA_CODE);
             }
         }
     }
@@ -113,4 +98,36 @@ public class TakePhoto extends AppCompatActivity {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+    @Override
+    public void onClick(View v) {
+
+        File outFile = null;
+        try {
+            outFile = createImageFile();
+            if(outFile != null) {
+
+                //take a picture
+                mCameraView.setCaptureMode(CameraView.CaptureMode.IMAGE);
+                ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(outFile).build();
+                mCameraView.takePicture(outputFileOptions, executor, this);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+        Intent returnIntent = new Intent();
+        returnIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        returnIntent.putExtra("result", currentPhotoPath);
+        setResult(Activity.RESULT_OK, returnIntent);
+        inProgress = false;
+        finish();
+    }
+
+    @Override
+    public void onError(@NonNull ImageCaptureException exception) { }
 }

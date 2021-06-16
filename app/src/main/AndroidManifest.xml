@@ -29,17 +29,13 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".GameActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity android:name=".TakePhoto" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".GameActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".TakePhoto"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

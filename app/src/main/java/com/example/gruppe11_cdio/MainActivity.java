@@ -1,14 +1,15 @@
 package com.example.gruppe11_cdio;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     View reglerView;
     Dialog alertDialog;
     TextView title,body;
+    final int USER_IMAGE_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +57,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v==spil){
-            Intent intent = new Intent(this,GameActivity.class);
-            startActivity(intent);
-            Toast.makeText(this, "Tag et billede af kabalen", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(this, TakePhoto.class);
+            startActivityForResult(i, USER_IMAGE_CODE);
         }
 
         if(v==regler) alertDialog.show();
         if(v== reglerOkButton) alertDialog.dismiss();
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == USER_IMAGE_CODE && resultCode == Activity.RESULT_OK) {
+            String path = data.getStringExtra("result");
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra("photo", path);
+            startActivity(intent);
+            GameActivity.fromMain = true;
+        }
     }
 }
