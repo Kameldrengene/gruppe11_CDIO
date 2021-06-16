@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v==spil){
-            Intent i = new Intent(this, TakePhoto.class);
+            Intent i = new Intent(this, TakePhoto2.class);
             startActivityForResult(i, USER_IMAGE_CODE);
         }
 

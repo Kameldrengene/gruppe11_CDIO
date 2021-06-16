@@ -34,6 +34,9 @@
         <activity android:name=".TakePhoto"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="portrait"/>
+        <activity android:name=".TakePhoto2"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

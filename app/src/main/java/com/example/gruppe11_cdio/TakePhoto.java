@@ -13,8 +13,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,10 +45,11 @@ import java.util.concurrent.Executors;
 public class TakePhoto extends AppCompatActivity implements View.OnClickListener, ImageCapture.OnImageSavedCallback {
     String currentPhotoPath = "";
     int CAMERA_REQUEST_CODE = 0;
-    static boolean inProgress = false;
     ImageView capture;
     private Executor executor = Executors.newSingleThreadExecutor();
     CameraView mCameraView;
+    TextView textDeck;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,7 +128,6 @@ public class TakePhoto extends AppCompatActivity implements View.OnClickListener
         returnIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         returnIntent.putExtra("result", currentPhotoPath);
         setResult(Activity.RESULT_OK, returnIntent);
-        inProgress = false;
         finish();
     }
 

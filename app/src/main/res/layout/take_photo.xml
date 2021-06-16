@@ -44,6 +44,7 @@
         app:layout_constraintHorizontal_weight="65"
         />
 
+
     <View
         android:id="@+id/viewDeck"
         android:layout_width="0dp"
@@ -56,18 +57,13 @@
         android:elevation="10dp"
         app:layout_constraintBottom_toTopOf="@+id/viewFinish"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintHorizontal_weight="35"
         app:layout_constraintStart_toEndOf="@+id/viewPiles"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="30" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/textView12"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="TextView"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/viewDeck"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/viewDeck" />-->
+
 
     <View
         android:id="@+id/viewFinish"
