@@ -5,22 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.camera.view.CameraView
-        android:id="@+id/cameraview"
+    <TextureView
+        android:id="@+id/textureView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-    </androidx.camera.view.CameraView>
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
-        android:id="@+id/capture"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="25dp"
-        android:elevation="10dp"
+        android:id="@+id/button8"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:background="@drawable/box_rounded_outline"
-        app:layout_constraintBottom_toTopOf="@+id/capture"
+        app:layout_constraintBottom_toTopOf="@+id/button8"
         app:layout_constraintEnd_toStartOf="@+id/viewFinish"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,7 +52,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/box_rounded_outline"
         android:elevation="10dp"
         app:layout_constraintBottom_toTopOf="@+id/viewFinish"
@@ -64,22 +64,32 @@
         app:layout_constraintVertical_weight="30" />
 
 
-
     <View
         android:id="@+id/viewFinish"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:background="@drawable/box_rounded_outline"
         android:elevation="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/capture"
+        app:layout_constraintBottom_toTopOf="@+id/button8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="35"
         app:layout_constraintStart_toEndOf="@+id/viewPiles"
         app:layout_constraintTop_toBottomOf="@+id/viewDeck"
         app:layout_constraintVertical_weight="70" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:rotation="90"
+        app:layout_constraintBottom_toBottomOf="@+id/button8"
+        app:layout_constraintEnd_toEndOf="@+id/button8"
+        app:layout_constraintStart_toStartOf="@+id/button8"
+        app:layout_constraintTop_toTopOf="@+id/button8"
+        app:srcCompat="@drawable/camera_grey" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
