@@ -1,15 +1,20 @@
 package com.example.gruppe11_cdio;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -18,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Dialog alertDialog;
     TextView title,body;
     final int USER_IMAGE_CODE = 0;
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +57,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 "tilbage-pilen. Kabalen kan " +
                 "startes igen, hvornår som helst. ");
         alertDialog.setContentView(reglerView);
-
     }
 
     @Override
     public void onClick(View v) {
         if(v==spil){
-            Intent i = new Intent(this, TakePhoto2.class);
-            startActivityForResult(i, USER_IMAGE_CODE);
+
+            //Ensure permission before continuing
+            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,new String[]{
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }, REQUEST_CAMERA_PERMISSION);
+            } else {
+                //Go a head and start
+                Intent i = new Intent(this, TakePhoto.class);
+                startActivityForResult(i, USER_IMAGE_CODE);
+            }
         }
 
         if(v==regler) alertDialog.show();
         if(v== reglerOkButton) alertDialog.dismiss();
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_CAMERA_PERMISSION) {
+            if(grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Mangler tilladelser", Toast.LENGTH_LONG).show();
+            } else {
+                //Go a head and start
+                Intent i = new Intent(this, TakePhoto.class);
+                startActivityForResult(i, USER_IMAGE_CODE);
+            }
+        }
     }
 
     @Override
