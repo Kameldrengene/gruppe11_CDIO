@@ -58,7 +58,7 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(v == takeImage){
-            Intent i = new Intent(getContext(), TakePhoto.class);
+            Intent i = new Intent(getContext(), TakePhoto3.class);
             startActivityForResult(i, USER_IMAGE_CODE);
         }
 
