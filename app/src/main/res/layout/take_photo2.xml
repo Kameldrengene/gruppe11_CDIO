@@ -82,7 +82,7 @@
         app:layout_constraintStart_toStartOf="@+id/viewDeck"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintVertical_weight="20"/>
+        app:layout_constraintVertical_weight="10"/>
 
     <View
         android:id="@+id/viewFinish"
@@ -97,6 +97,6 @@
         app:layout_constraintHorizontal_weight="25"
         app:layout_constraintStart_toEndOf="@+id/viewPiles"
         app:layout_constraintTop_toBottomOf="@+id/spacer1"
-        app:layout_constraintVertical_weight="50" />
+        app:layout_constraintVertical_weight="60" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
