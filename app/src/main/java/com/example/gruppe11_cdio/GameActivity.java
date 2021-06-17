@@ -2,8 +2,6 @@ package com.example.gruppe11_cdio;
 
 import java.text.SimpleDateFormat;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -14,8 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 
 import com.example.gruppe11_cdio.Factory.Card;
 import com.example.gruppe11_cdio.Factory.Card_Factory;
@@ -74,10 +70,18 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
     GameBoard gameBoard = new GameBoard();
     Animation shake;
 
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    int deviceHeight;
+    int deviceWidth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        deviceHeight = displayMetrics.heightPixels;
+        deviceWidth = displayMetrics.widthPixels;
 
         bgThread = Executors.newSingleThreadExecutor();
         uiThread = new Handler();
@@ -166,6 +170,8 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         Request request = new Request.Builder()
                 .url("http://cdio.isik.dk:5000")
                 .method("POST", body)
+                .addHeader("deviceWidth", String.valueOf(deviceWidth))
+                .addHeader("deviceHeight", String.valueOf(deviceHeight))
                 .build();
         bgThread.execute(()->{
             try {

@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }, REQUEST_CAMERA_PERMISSION);
             } else {
                 //Go a head and start
-                Intent i = new Intent(this, TakePhoto2.class);
+                Intent i = new Intent(this, TakePhoto3.class);
                 startActivityForResult(i, USER_IMAGE_CODE);
             }
         }
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Mangler tilladelser", Toast.LENGTH_LONG).show();
             } else {
                 //Go a head and start
-                Intent i = new Intent(this, TakePhoto2.class);
+                Intent i = new Intent(this, TakePhoto3.class);
                 startActivityForResult(i, USER_IMAGE_CODE);
             }
         }
