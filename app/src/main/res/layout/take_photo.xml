@@ -3,31 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+
     android:layout_height="match_parent">
 
-    <TextureView
-        android:id="@+id/textureView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
     <ImageView
-        android:id="@+id/button8"
+        android:id="@+id/capture"
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_marginBottom="15dp"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_baseline_circle_24" />
+        app:srcCompat="@drawable/grey_circle" />
+
+    <com.otaliastudios.cameraview.CameraView
+        android:id="@+id/camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:keepScreenOn="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </com.otaliastudios.cameraview.CameraView>
 
     <View
-        android:elevation="10dp"
         android:id="@+id/viewPiles"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -36,13 +37,13 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:background="@drawable/box_rounded_outline"
-        app:layout_constraintBottom_toTopOf="@+id/button8"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/camera"
         app:layout_constraintEnd_toStartOf="@+id/viewFinish"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintHorizontal_weight="65"
-        />
+        app:layout_constraintStart_toStartOf="@+id/camera"
+        app:layout_constraintTop_toTopOf="@+id/camera"
+        app:layout_constraintVertical_bias="0.0" />
 
 
     <View
@@ -52,45 +53,54 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="30dp"
         android:background="@drawable/box_rounded_outline"
         android:elevation="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewFinish"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/spacer1"
+        app:layout_constraintEnd_toEndOf="@+id/camera"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintHorizontal_weight="35"
         app:layout_constraintStart_toEndOf="@+id/viewPiles"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/camera"
         app:layout_constraintVertical_weight="30" />
+
+    <View
+        android:id="@+id/spacer1"
+        app:layout_constraintTop_toBottomOf="@+id/viewDeck"
+        app:layout_constraintBottom_toTopOf="@+id/viewFinish"
+        app:layout_constraintEnd_toEndOf="@+id/viewDeck"
+        app:layout_constraintStart_toStartOf="@+id/viewDeck"
+        app:layout_constraintVertical_weight="10"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
 
 
     <View
         android:id="@+id/viewFinish"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="30dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:background="@drawable/box_rounded_outline"
         android:elevation="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/button8"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/camera"
+        app:layout_constraintEnd_toEndOf="@+id/camera"
         app:layout_constraintHorizontal_weight="35"
         app:layout_constraintStart_toEndOf="@+id/viewPiles"
-        app:layout_constraintTop_toBottomOf="@+id/viewDeck"
-        app:layout_constraintVertical_weight="70" />
+        app:layout_constraintTop_toBottomOf="@+id/spacer1"
+        app:layout_constraintVertical_weight="60" />
+
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imageView4"
+        android:rotation="90"
+        android:elevation="15dp"
         android:layout_width="33dp"
         android:layout_height="33dp"
-        android:rotation="90"
-        app:layout_constraintBottom_toBottomOf="@+id/button8"
-        app:layout_constraintEnd_toEndOf="@+id/button8"
-        app:layout_constraintStart_toStartOf="@+id/button8"
-        app:layout_constraintTop_toTopOf="@+id/button8"
-        app:srcCompat="@drawable/camera_grey" />
+        app:layout_constraintBottom_toBottomOf="@+id/capture"
+        app:layout_constraintEnd_toEndOf="@+id/capture"
+        app:layout_constraintStart_toStartOf="@+id/capture"
+        app:layout_constraintTop_toTopOf="@+id/capture"
+        app:srcCompat="@drawable/ic_baseline_camera_alt_24" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

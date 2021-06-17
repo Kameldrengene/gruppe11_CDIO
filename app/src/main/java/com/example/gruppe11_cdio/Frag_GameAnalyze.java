@@ -2,7 +2,6 @@ package com.example.gruppe11_cdio;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +57,7 @@ public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(v == takeImage){
-            Intent i = new Intent(getContext(), TakePhoto3.class);
+            Intent i = new Intent(getContext(), TakePhoto.class);
             startActivityForResult(i, USER_IMAGE_CODE);
         }
 

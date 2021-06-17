@@ -70,18 +70,10 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
     GameBoard gameBoard = new GameBoard();
     Animation shake;
 
-    DisplayMetrics displayMetrics = new DisplayMetrics();
-    int deviceHeight;
-    int deviceWidth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        deviceHeight = displayMetrics.heightPixels;
-        deviceWidth = displayMetrics.widthPixels;
 
         bgThread = Executors.newSingleThreadExecutor();
         uiThread = new Handler();
@@ -170,8 +162,6 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         Request request = new Request.Builder()
                 .url("http://cdio.isik.dk:5000")
                 .method("POST", body)
-                .addHeader("deviceWidth", String.valueOf(deviceWidth))
-                .addHeader("deviceHeight", String.valueOf(deviceHeight))
                 .build();
         bgThread.execute(()->{
             try {
