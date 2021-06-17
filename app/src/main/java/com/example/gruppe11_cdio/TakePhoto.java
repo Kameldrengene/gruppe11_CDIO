@@ -40,6 +40,7 @@ public class TakePhoto extends AppCompatActivity implements View.OnClickListener
 
         camera = findViewById(R.id.camera);
         camera.setLifecycleOwner(this);
+        camera.setUseDeviceOrientation(false);
         camera.addCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(PictureResult result) {
