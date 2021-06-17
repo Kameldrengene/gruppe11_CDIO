@@ -65,14 +65,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Ensure permission before continuing
             if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-            || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,new String[]{
                         Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO
                 }, REQUEST_CAMERA_PERMISSION);
             } else {
                 //Go a head and start
-                Intent i = new Intent(this, TakePhoto.class);
+                Intent i = new Intent(this, TakePhoto2.class);
                 startActivityForResult(i, USER_IMAGE_CODE);
             }
         }
@@ -85,11 +87,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == REQUEST_CAMERA_PERMISSION) {
-            if(grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+            if(grantResults[0] != PackageManager.PERMISSION_GRANTED
+            || grantResults[1] != PackageManager.PERMISSION_GRANTED
+            || grantResults[2] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Mangler tilladelser", Toast.LENGTH_LONG).show();
             } else {
                 //Go a head and start
-                Intent i = new Intent(this, TakePhoto.class);
+                Intent i = new Intent(this, TakePhoto2.class);
                 startActivityForResult(i, USER_IMAGE_CODE);
             }
         }
