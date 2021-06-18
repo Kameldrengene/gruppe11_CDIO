@@ -36,26 +36,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         regler.setOnClickListener(this);
 
         alertDialog = new Dialog(this);
-        reglerView = getLayoutInflater().inflate(R.layout.popup1button, null);
+        reglerView = getLayoutInflater().inflate(R.layout.popup_1button, null);
         title=reglerView.findViewById(R.id.alertTitle);
         body=reglerView.findViewById(R.id.alertBody);
         reglerOkButton = reglerView.findViewById(R.id.alertButton);
         reglerOkButton.setOnClickListener(this);
-        title.setText("Velkommen til 7-kabale");
-        body.setText("\nDenne app bruges til at hjælpe med 7-kabale. " +
-                "\n\nDu kan starte appen i hvilken " +
-                "som helst tidspunkt i et spil. " +
-                "Du tager så et billede ved at " +
-                "trykke på knappen “Tag billede” " +
-                "og appen lærer din situation at " +
-                "kende. " +
-                "Herefter, tager du et nyt billede " +
-                "efter hvert træk du tager. " +
+        title.setText("Velkommen til 7-kabale!");
+        body.setText("\nDenne app kan hjælpe med 7-kabale. " +
+                "\n\nDu kan starte appen når som helst " +
+                "i et spil og tage et billede af kabalen. " +
+                "Appen vil da forsøge at afkode billedet, " +
+                "og du vil have mulighed for at analysere " +
+                "kabalen for det bedste næste træk. " +
+                "Efter hvert træk kan du så tage et nyt billede." +
                 "Hvis du vælger at stoppe med at " +
-                "bruge hjælpen, skal du gå ud af " +
+                "bruge hjælpen, kan du gå ud af " +
                 "spillet ved at trykke på " +
-                "tilbage-pilen. Kabalen kan " +
-                "startes igen, hvornår som helst. ");
+                "tilbage knappen. Kabalen kan " +
+                "startes igen når som helst. ");
         alertDialog.setContentView(reglerView);
     }
 
