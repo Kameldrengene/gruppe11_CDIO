@@ -172,7 +172,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                 //If success
                 uiThread.post(()->{
 
-                    //Update gameboard internally
+                    //Update gameboard internally and display
                     gameBoard = new Gson().fromJson(responseMsg, GameBoard.class);
                     loadingDialog.dismissDialog();
                     displayBoard();
