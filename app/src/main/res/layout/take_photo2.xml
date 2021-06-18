@@ -56,8 +56,10 @@
         android:keepScreenOn="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
     </com.otaliastudios.cameraview.CameraView>
 
@@ -127,7 +129,6 @@
         android:id="@+id/space1"
         android:layout_width="30dp"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
         app:layout_constraintBottom_toTopOf="@+id/space2"
         app:layout_constraintEnd_toEndOf="@+id/viewPiles"
         app:layout_constraintTop_toTopOf="@+id/viewPiles"
@@ -241,7 +242,6 @@
         android:id="@+id/space7"
         android:layout_width="30dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="@id/viewPiles"
         app:layout_constraintEnd_toEndOf="@+id/viewPiles"
         app:layout_constraintTop_toBottomOf="@+id/space6"
