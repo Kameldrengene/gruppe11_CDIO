@@ -30,12 +30,23 @@
         android:id="@+id/capture"
         android:layout_width="65dp"
         android:layout_height="65dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
         android:elevation="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/camera"
         app:srcCompat="@drawable/grey_circle" />
+
+<!--    <View-->
+<!--        android:id="@+id/balancer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="1dp"-->
+<!--        android:layout_marginBottom="95dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
     <ImageView
         android:id="@+id/imageView4"
@@ -51,15 +62,13 @@
 
     <com.otaliastudios.cameraview.CameraView
         android:id="@+id/camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:keepScreenOn="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/capture"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
     </com.otaliastudios.cameraview.CameraView>
 
@@ -242,6 +251,7 @@
         android:id="@+id/space7"
         android:layout_width="30dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="@id/viewPiles"
         app:layout_constraintEnd_toEndOf="@+id/viewPiles"
         app:layout_constraintTop_toBottomOf="@+id/space6"
