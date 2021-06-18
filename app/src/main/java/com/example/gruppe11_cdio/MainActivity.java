@@ -42,13 +42,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reglerOkButton = reglerView.findViewById(R.id.alertButton);
         reglerOkButton.setOnClickListener(this);
         title.setText("Velkommen til 7-kabale!");
-        body.setText("\nDenne app kan hjælpe med 7-kabale. " +
+        body.setText("\nDenne app kan hjælpe med at analysere en 7-kabale. " +
                 "\n\nDu kan starte appen når som helst " +
                 "i et spil og tage et billede af kabalen. " +
                 "Appen vil da forsøge at afkode billedet, " +
                 "og du vil have mulighed for at analysere " +
                 "kabalen for det bedste næste træk. " +
-                "Efter hvert træk kan du så tage et nyt billede." +
+                "Efter hvert træk kan du så tage et nyt billede. " +
                 "Hvis du vælger at stoppe med at " +
                 "bruge hjælpen, kan du gå ud af " +
                 "spillet ved at trykke på " +
