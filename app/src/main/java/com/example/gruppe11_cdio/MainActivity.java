@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if(v==spil){
 
-            //Ensure permission before continuing
+            //Ensure permissions before continuing
             if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
             || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
             || ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Manifest.permission.RECORD_AUDIO
                 }, REQUEST_CAMERA_PERMISSION);
             } else {
-                //Go a head and start
+                //Go ahead and start
                 Intent i = new Intent(this, TakePhoto.class);
                 startActivityForResult(i, USER_IMAGE_CODE);
             }
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             || grantResults[2] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Mangler tilladelser", Toast.LENGTH_LONG).show();
             } else {
-                //Go a head and start
+                //Go ahead and start
                 Intent i = new Intent(this, TakePhoto.class);
                 startActivityForResult(i, USER_IMAGE_CODE);
             }

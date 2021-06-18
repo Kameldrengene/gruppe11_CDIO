@@ -120,4 +120,187 @@
         app:layout_constraintTop_toBottomOf="@+id/spacer1"
         app:layout_constraintVertical_weight="60" />
 
+
+    <!--    Tick marks right -->
+
+    <View
+        android:id="@+id/space1"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/space2"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toTopOf="@+id/viewPiles"
+        app:layout_constraintVertical_weight="1" />
+
+    <View
+        android:id="@+id/bar1"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space1"
+        />
+
+    <View
+        android:id="@+id/space2"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space1"
+        app:layout_constraintBottom_toTopOf="@+id/space3"
+        app:layout_constraintVertical_weight="1"
+        />
+
+    <View
+        android:id="@+id/bar2"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space2"
+        />
+
+    <View
+        android:id="@+id/space3"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space2"
+        app:layout_constraintBottom_toTopOf="@+id/space4"
+        app:layout_constraintVertical_weight="1"
+        />
+
+    <View
+        android:id="@+id/bar3"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space3"
+        />
+
+    <View
+        android:id="@+id/space4"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space3"
+        app:layout_constraintBottom_toTopOf="@+id/space5"
+        app:layout_constraintVertical_weight="1"
+        />
+
+    <View
+        android:id="@+id/bar4"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space4"
+        />
+
+    <View
+        android:id="@+id/space5"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space4"
+        app:layout_constraintBottom_toTopOf="@+id/space6"
+        app:layout_constraintVertical_weight="1"
+        />
+
+    <View
+        android:id="@+id/bar5"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space5"
+        />
+
+    <View
+        android:id="@+id/space6"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space5"
+        app:layout_constraintBottom_toTopOf="@+id/space7"
+        app:layout_constraintVertical_weight="1"
+        />
+
+    <View
+        android:id="@+id/bar6"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space6"
+        />
+
+    <View
+        android:id="@+id/space7"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/viewPiles"
+        app:layout_constraintEnd_toEndOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space6"
+        app:layout_constraintVertical_weight="1" />
+
+    <!--  Tick marks left  -->
+
+    <View
+        android:id="@+id/bar1l"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintStart_toStartOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space1"
+        />
+
+    <View
+        android:id="@+id/bar2l"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintStart_toStartOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space2"
+        />
+
+    <View
+        android:id="@+id/bar3l"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintStart_toStartOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space3"
+        />
+
+    <View
+        android:id="@+id/bar4l"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintStart_toStartOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space4"
+        />
+
+    <View
+        android:id="@+id/bar5l"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintStart_toStartOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space5"
+        />
+
+    <View
+        android:id="@+id/bar6l"
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintStart_toStartOf="@+id/viewPiles"
+        app:layout_constraintTop_toBottomOf="@+id/space6"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
