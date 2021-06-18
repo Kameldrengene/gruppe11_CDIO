@@ -1,10 +1,14 @@
 package com.example.gruppe11_cdio;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -29,11 +33,17 @@ public class TakePhoto extends AppCompatActivity implements View.OnClickListener
     String currentPhotoPath = "";
     ImageView capture;
     CameraView camera;
+    SharedPreferences prefs;
+    Dialog dialog;
+    View view, info;
+    Button ok;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.take_photo2);
+
+        prefs = getSharedPreferences("com.example.gruppe11_cdio", MODE_PRIVATE);
 
         capture = findViewById(R.id.capture);
         capture.setOnClickListener(this);
@@ -54,6 +64,31 @@ public class TakePhoto extends AppCompatActivity implements View.OnClickListener
                 });
             }
         });
+
+        info = findViewById(R.id.info);
+        info.setOnClickListener(this);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //Show first time message
+        if (prefs.getBoolean("firstrun", true)) {
+            showDialog();
+            prefs.edit().putBoolean("firstrun", false).commit();
+        }
+
+    }
+
+    private void showDialog() {
+        dialog = new Dialog(this);
+        view = getLayoutInflater().inflate(R.layout.popup_camera, null);
+        ok = view.findViewById(R.id.alertButton);
+        ok.setOnClickListener(this);
+        dialog.setContentView(view);
+        dialog.show();
     }
 
     private File createImageFile() {
@@ -77,6 +112,12 @@ public class TakePhoto extends AppCompatActivity implements View.OnClickListener
         return image;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(dialog != null && dialog.isShowing()) dialog.dismiss();
+    }
+
     private void finishThis() {
         Intent returnIntent = new Intent();
         returnIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -87,6 +128,8 @@ public class TakePhoto extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        camera.takePicture();
+        if(v == ok) dialog.dismiss();
+        if(v == info) showDialog();
+        if(v == capture) camera.takePicture();
     }
 }

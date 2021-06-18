@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         regler.setOnClickListener(this);
 
         alertDialog = new Dialog(this);
-        reglerView = getLayoutInflater().inflate(R.layout.popup1button, null);
+        reglerView = getLayoutInflater().inflate(R.layout.popup_1button, null);
         title=reglerView.findViewById(R.id.alertTitle);
         body=reglerView.findViewById(R.id.alertBody);
         reglerOkButton = reglerView.findViewById(R.id.alertButton);
