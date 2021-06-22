@@ -348,6 +348,8 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                 }
             }
 
+            System.out.println("INDEX : " + onClickLayoutIndex);
+
             //If a pile was clicked
             if(onClickLayoutIndex <= 6){
                 ArrayList<Card> cardsToShow = getCardsFromPile(onClickLayoutIndex);
@@ -357,13 +359,13 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
             //If a finish space was clicked
             } else if(onClickLayoutIndex <= 10) {
                 Card cardToShow  = getTopCardFromFinishSpace(onClickLayoutIndex - NUMBER_OF_SPACES);
-                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), cardWidth, cardHeight, EDIT_FINISH_CODE);
+                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), onClickLayoutIndex, cardWidth, cardHeight, EDIT_FINISH_CODE);
                 cardEditor.show(this.getSupportFragmentManager(), null);
 
             //If the deck was clicked
             } else if(onClickLayoutIndex == 11){
                 Card cardToShow = getTopCardFromDeck();
-                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), cardWidth, cardHeight, EDIT_DECK_CODE);
+                Popup_CardEditor cardEditor = new Popup_CardEditor(this, cardToShow, layouts[onClickLayoutIndex].getName(), onClickLayoutIndex, cardWidth, cardHeight, EDIT_DECK_CODE);
                 cardEditor.show(this.getSupportFragmentManager(), null);
             } else if(onClickLayoutIndex == 12){
 
@@ -421,7 +423,6 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         } else {
 
             int deckPointer = gameBoard.getDeckPointer();
-            System.out.println("DECK BEFORE : " + gameBoard.getDeckPointer());
 
             //If the new card is empty
             if(card.isEmpty()) {
@@ -439,8 +440,6 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                 }
             }
         }
-
-        System.out.println("DECK AFTER : " + gameBoard.getDeckPointer());
         displayBoard();
     }
 
@@ -454,7 +453,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
     private Card getTopCardFromFinishSpace(int i){
         ArrayList<Card> cards = gameBoard.getFinSpaces().get(i);
         if(cards.size() == 0) return new Card(1,0);
-        else return cards.get(cards.size() - 1).deepCopy();
+        else return cards.get(0).deepCopy();
     }
 
     //Protects against null. Returns deep copy

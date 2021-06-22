@@ -25,7 +25,7 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
 
     private Popup_Interface listener;
     private Card card;
-    private int CODE, cardWidth, cardHeight;
+    private int CODE, cardWidth, cardHeight, pileIndex;
     private String pileName;
 
     private Button save, plus, minus;
@@ -35,11 +35,12 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
 
     private String[] valuesAll = {"A","2","3","4","5","6","7","8","9","10","11","12","13"};
     private String[] colors = {"Spar","Hjerter","Klør","Ruder"};
+    private String[][] color = { {"Spar"}, {"Ruder"}, {"Klør"}, {"Hjerter"} };
 
     private Card_Factory card_factory;
     private ImageView cardView;
 
-    public Popup_CardEditor(Popup_Interface listener, Card card, String pileName, int cardWidth, int cardHeight, int CODE) {
+    public Popup_CardEditor(Popup_Interface listener, Card card, String pileName, int pileIndex, int cardWidth, int cardHeight, int CODE) {
         this.listener = listener;
 
         //Best practice with deep copy if user decides not to save
@@ -48,6 +49,7 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
         this.pileName = pileName;
         this.cardWidth = cardWidth;
         this.cardHeight = cardHeight;
+        this.pileIndex = pileIndex - 7;
         card_factory = new Card_Factory(this.listener);
     }
 
@@ -122,8 +124,8 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
     }
 
     private void refreshColorSpinner(){
-        //If the stack is empty or the "back card" is chosen, hide this option
-        if(card.equals(new Card(1,0)) || card.getValue() == 14){
+        //If the stack is empty, the "back card" is chosen or it is a finish space, hide this option
+        if(card.equals(new Card(1,0)) || card.getValue() == 14 || (pileIndex >= 0 && pileIndex <= 3)){
             colorSpinner.setVisibility(View.GONE);
             colorText.setVisibility(View.GONE);
         } else {
@@ -162,6 +164,10 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
 
         if(v == plus){
             card = new Card(0,1);
+            if(pileIndex == 3) card.setType(1);
+            if(pileIndex == 2) card.setType(2);
+            if(pileIndex == 1) card.setType(3);
+            if(pileIndex == 0) card.setType(0);
             refreshCard();
             refreshColorSpinner();
             refreshValueSpinner();
@@ -184,7 +190,7 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         if(parent.getId() == VALUE_SPINNER_ID){
-            card.setValue(position+1);
+            card.setValue(position + 1);
             refreshColorSpinner();
             refreshCard();
         }
