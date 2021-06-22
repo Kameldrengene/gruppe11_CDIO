@@ -2,6 +2,7 @@ package com.example.gruppe11_cdio;
 
 import java.text.SimpleDateFormat;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -162,6 +163,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         Request request = new Request.Builder()
                 .url("http://cdio.isik.dk:5000")
                 .method("POST", body)
+                .addHeader("margin", String.valueOf(dpToPx(15f))) //Append independent device margin
                 .build();
         bgThread.execute(()->{
             try {
@@ -452,7 +454,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
     private Card getTopCardFromFinishSpace(int i){
         ArrayList<Card> cards = gameBoard.getFinSpaces().get(i);
         if(cards.size() == 0) return new Card(1,0);
-        else return cards.get(0).deepCopy();
+        else return cards.get(cards.size() - 1).deepCopy();
     }
 
     //Protects against null. Returns deep copy
@@ -471,6 +473,16 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         for (int i = 0; i < cards.size(); i++)
             out.add(new Card(cards.get(i).getType(), cards.get(i).getValue()));
         return out;
+    }
+
+    private float dpToPx(float dip) {
+        Resources r = getResources();
+        float px = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dip,
+                r.getDisplayMetrics()
+        );
+        return px;
     }
 }
 

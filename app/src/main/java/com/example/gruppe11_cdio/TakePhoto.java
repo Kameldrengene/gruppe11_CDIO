@@ -54,7 +54,7 @@ public class TakePhoto extends AppCompatActivity implements View.OnClickListener
         camera.addCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(PictureResult result) {
-                // A Picture was taken!
+                //A Picture was taken
                 File file = createImageFile();
                 result.toFile(file, new FileCallback() {
                     @Override
