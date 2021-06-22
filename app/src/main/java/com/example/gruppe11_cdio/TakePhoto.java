@@ -130,6 +130,6 @@ public class TakePhoto extends AppCompatActivity implements View.OnClickListener
     public void onClick(View v) {
         if(v == ok) dialog.dismiss();
         if(v == info) showDialog();
-        if(v == capture) camera.takePictureSnapshot();
+        if(v == capture) camera.takePicture();
     }
 }
