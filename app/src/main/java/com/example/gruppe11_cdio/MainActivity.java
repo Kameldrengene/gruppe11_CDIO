@@ -10,9 +10,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,10 +18,10 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button spil, reglerOkButton,regler;
-    View reglerView;
-    Dialog alertDialog;
-    TextView title,body;
+    Button spil, instruksOK, rulesOK, instrukser, rules;
+    View instrukserView, rulesView;
+    Dialog instrukserDialog, rulesDialog;
+    TextView titleInstruks, bodyInstruks, titleRules, bodyRules;
     final int USER_IMAGE_CODE = 0;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
 
@@ -33,18 +31,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         spil = findViewById(R.id.spil_button);
-        regler = findViewById(R.id.regler);
+        instrukser = findViewById(R.id.regler);
         spil.setOnClickListener(this);
-        regler.setOnClickListener(this);
+        instrukser.setOnClickListener(this);
+        rules = findViewById(R.id.regler2);
+        rules.setOnClickListener(this);
 
-        alertDialog = new Dialog(this);
-        reglerView = getLayoutInflater().inflate(R.layout.popup_1button, null);
-        title=reglerView.findViewById(R.id.alertTitle);
-        body=reglerView.findViewById(R.id.alertBody);
-        reglerOkButton = reglerView.findViewById(R.id.alertButton);
-        reglerOkButton.setOnClickListener(this);
-        title.setText("Velkommen til 7-kabale!");
-        body.setText("\nDenne app kan hjælpe med at analysere en 7-kabale. " +
+        instrukserDialog = new Dialog(this);
+        instrukserView = getLayoutInflater().inflate(R.layout.popup_1button, null);
+        titleInstruks = instrukserView.findViewById(R.id.alertTitle);
+        bodyInstruks = instrukserView.findViewById(R.id.alertBody);
+        instruksOK = instrukserView.findViewById(R.id.alertButton);
+        instruksOK.setOnClickListener(this);
+        titleInstruks.setText("Velkommen til 7-kabale!");
+        bodyInstruks.setText("\nDenne app kan hjælpe med at analysere en 7-kabale. " +
                 "\n\nDu kan starte appen når som helst " +
                 "i et spil og tage et billede af kabalen. " +
                 "Appen vil da forsøge at afkode billedet, " +
@@ -56,7 +56,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 "spillet ved at trykke på " +
                 "tilbage knappen. Kabalen kan " +
                 "startes igen når som helst. ");
-        alertDialog.setContentView(reglerView);
+        instrukserDialog.setContentView(instrukserView);
+
+        rulesDialog = new Dialog(this);
+        rulesView = getLayoutInflater().inflate(R.layout.popup_1button, null);
+        titleRules = rulesView.findViewById(R.id.alertTitle);
+        bodyRules = rulesView.findViewById(R.id.alertBody);
+        rulesOK = rulesView.findViewById(R.id.alertButton);
+        rulesOK.setOnClickListener(this);
+        titleRules.setText("Regler for 7-kabale");
+        bodyRules.setText("\n7-kabalen opstilles med 7 kolonner. I rækkefølge fra venstre" +
+                " har kolonnerne 0, 1, 2, … , 6 lukkede kort og alle har 1 åbent" +
+                " kort oven på de lukkede. Resten af kortene placeres øverst til" +
+                " venstre og spillet starter. Når der bliver bedt om at trække kort," +
+                " skal kun et enkelt kort fra bunken vendes og lægges til højre for" +
+                " bunken. Hvis der ikke er flere kort I bunken, vendes bunken af åbne" +
+                " kort om og dette er den nye bunke.");
+        rulesDialog.setContentView(rulesView);
+
     }
 
     @Override
@@ -79,9 +96,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        if(v==regler) alertDialog.show();
-        if(v== reglerOkButton) alertDialog.dismiss();
-
+        if(v == instrukser) instrukserDialog.show();
+        if(v == instruksOK) instrukserDialog.dismiss();
+        if(v == rules) rulesDialog.show();
+        if(v == rulesOK) rulesDialog.dismiss();
     }
 
     @Override

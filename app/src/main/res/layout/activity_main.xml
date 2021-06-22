@@ -42,6 +42,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spil_button" />
 
+    <Button
+        android:id="@+id/regler2"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/secondarydark"
+        android:text="Regler"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/regler" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
