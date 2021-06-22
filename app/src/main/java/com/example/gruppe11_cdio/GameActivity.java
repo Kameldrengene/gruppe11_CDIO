@@ -318,7 +318,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
             if(i==0) rp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             else rp.addRule(RelativeLayout.ALIGN_TOP, cardViews.get(i-1).getId());
 
-            rp.setMargins(10,40,10,0);
+            rp.setMargins(10,60,10,0);
             layout.getLayout().addView(cardViews.get(i),rp);
         }
     }
