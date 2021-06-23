@@ -6,7 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".GameActivity">
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/winanimation"
+        android:elevation="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="false"
+        app:lottie_rawRes="@raw/winanimation" />
+
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,6 +48,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/open"
                     android:layout_width="wrap_content"
@@ -42,6 +57,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/holder1"
                     android:layout_width="wrap_content"
@@ -50,6 +66,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/holder2"
                     android:layout_width="wrap_content"
@@ -58,6 +75,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/holder3"
                     android:layout_width="wrap_content"
@@ -66,6 +84,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/holder4"
                     android:layout_width="wrap_content"

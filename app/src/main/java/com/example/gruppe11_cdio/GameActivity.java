@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.gruppe11_cdio.Factory.Card;
 import com.example.gruppe11_cdio.Factory.Card_Factory;
 import com.example.gruppe11_cdio.Objects.GameBoard;
@@ -70,6 +71,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
     Card_Factory card_factory;
     GameBoard gameBoard = new GameBoard();
     Animation shake;
+    LottieAnimationView winAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
         bgThread = Executors.newSingleThreadExecutor();
         uiThread = new Handler();
         loadingDialog = new Dialog_Loading(this);
+        winAnimation = findViewById(R.id.winanimation);
 
         shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 
@@ -226,6 +229,8 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                 //If success
                 uiThread.post(()->{
 
+                    loadingDialog.dismissDialog();
+
                     //Display message
                     if(responseMsg.isCorrect()){
                         nextMove = responseMsg.getMsg();
@@ -235,7 +240,11 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
                                 .commitAllowingStateLoss();
                     } else
                         Toast.makeText(this, responseMsg.getMsg(), Toast.LENGTH_LONG).show();
-                    loadingDialog.dismissDialog();
+                });
+
+                uiThread.post(()->{
+                    //If game is won play win animation after load screen
+                    if(responseMsg.getMsg().equals("Kabalen er vundet!!")) winAnimation.playAnimation();
                 });
 
             } catch (IOException e) {
