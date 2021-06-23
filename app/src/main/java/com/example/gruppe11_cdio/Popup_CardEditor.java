@@ -19,6 +19,15 @@ import com.example.gruppe11_cdio.Factory.Card_Factory;
 
 import static android.R.layout.simple_spinner_item;
 
+/*
+Mikkel Danielsen, s183913
+Frederik Koefoed, s195463
+Muhammad Talha, s195475
+Volkan Isik, s180103
+Lasse Strunge, s19548
+Mark Mortensen, s174881
+ */
+
 public class Popup_CardEditor extends AppCompatDialogFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private int VALUE_SPINNER_ID, COLOR_SPINNER_ID;

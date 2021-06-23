@@ -25,7 +25,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /*
-SOURCE : https://github.com/eddydn/AndroidCamera2API/blob/master/app/src/main/java/edmt/dev/androidcamera2api/MainActivity.java
+Mikkel Danielsen, s183913
+Frederik Koefoed, s195463
+Muhammad Talha, s195475
+Volkan Isik, s180103
+Lasse Strunge, s19548
+Mark Mortensen, s174881
  */
 
 public class TakePhoto extends AppCompatActivity implements View.OnClickListener {

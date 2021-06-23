@@ -24,6 +24,15 @@ import java.util.List;
 
 import static android.R.layout.simple_spinner_item;
 
+/*
+Mikkel Danielsen, s183913
+Frederik Koefoed, s195463
+Muhammad Talha, s195475
+Volkan Isik, s180103
+Lasse Strunge, s19548
+Mark Mortensen, s174881
+ */
+
 public class Popup_PileEditor extends AppCompatDialogFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private int CARD_SPINNER_ID, VALUE_SPINNER_ID, COLOR_SPINNER_ID;

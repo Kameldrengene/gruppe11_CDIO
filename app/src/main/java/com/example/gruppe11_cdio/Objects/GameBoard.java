@@ -6,6 +6,15 @@ import java.util.HashMap;
 import java.util.Random;
 import com.example.gruppe11_cdio.Factory.Card;
 
+/*
+Mikkel Danielsen, s183913
+Frederik Koefoed, s195463
+Muhammad Talha, s195475
+Volkan Isik, s180103
+Lasse Strunge, s19548
+Mark Mortensen, s174881
+ */
+
 public class GameBoard {
     private HashMap<Integer, ArrayList<Card>> finSpaces  = new HashMap<>(); //key is type: 0: spar; 1: Hjerter; 2: Klør; 3: Ruder;
     private ArrayList<Card> deck = new ArrayList<>();;

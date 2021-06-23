@@ -12,6 +12,15 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/*
+Mikkel Danielsen, s183913
+Frederik Koefoed, s195463
+Muhammad Talha, s195475
+Volkan Isik, s180103
+Lasse Strunge, s19548
+Mark Mortensen, s174881
+ */
+
 public class Frag_GameAnalyze extends Fragment implements View.OnClickListener {
 
     Button takeImage, back;

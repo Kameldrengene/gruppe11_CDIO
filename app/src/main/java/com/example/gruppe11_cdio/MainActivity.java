@@ -16,6 +16,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/*
+Mikkel Danielsen, s183913
+Frederik Koefoed, s195463
+Muhammad Talha, s195475
+Volkan Isik, s180103
+Lasse Strunge, s19548
+Mark Mortensen, s174881
+ */
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button spil, instruksOK, rulesOK, instrukser, rules;

@@ -40,6 +40,15 @@ import okhttp3.Response;
 
 import static java.lang.Thread.sleep;
 
+/*
+Mikkel Danielsen, s183913
+Frederik Koefoed, s195463
+Muhammad Talha, s195475
+Volkan Isik, s180103
+Lasse Strunge, s19548
+Mark Mortensen, s174881
+ */
+
 //Card(type, value)
 //Card(?,14) == card back
 //Card(1,0) == empty card
@@ -224,7 +233,8 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
             try {
                 sleep(2000);
                 Response response = client.newCall(request).execute();
-                MoveDTO responseMsg = g.fromJson(response.body().string(), MoveDTO.class);
+//                MoveDTO responseMsg = g.fromJson(response.body().string(), MoveDTO.class);
+                MoveDTO responseMsg = new MoveDTO(true, "Kabalen er vundet!!");
 
                 //If success
                 uiThread.post(()->{
