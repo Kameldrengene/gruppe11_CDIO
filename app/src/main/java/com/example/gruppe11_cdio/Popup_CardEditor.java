@@ -164,10 +164,7 @@ public class Popup_CardEditor extends AppCompatDialogFragment implements Adapter
 
         if(v == plus){
             card = new Card(0,1);
-            if(pileIndex == 3) card.setType(1);
-            if(pileIndex == 2) card.setType(2);
-            if(pileIndex == 1) card.setType(3);
-            if(pileIndex == 0) card.setType(0);
+            card.setType(pileIndex);
             refreshCard();
             refreshColorSpinner();
             refreshValueSpinner();
