@@ -233,8 +233,7 @@ public class GameActivity extends Popup_Interface implements Frag_GameControls.C
             try {
                 sleep(2000);
                 Response response = client.newCall(request).execute();
-//                MoveDTO responseMsg = g.fromJson(response.body().string(), MoveDTO.class);
-                MoveDTO responseMsg = new MoveDTO(true, "Kabalen er vundet!!");
+                MoveDTO responseMsg = g.fromJson(response.body().string(), MoveDTO.class);
 
                 //If success
                 uiThread.post(()->{
